@@ -369,15 +369,6 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </div>
       </div>
 
       {/* New Alert Modal */}

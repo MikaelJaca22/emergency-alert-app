@@ -218,10 +218,9 @@ app.get('/api/auth/me', async (req, res) => {
 // Get all residents
 app.get('/api/residents', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     const response = await axios.get(
       `${SUPABASE_URL}/rest/v1/residents?order=created_at.desc`,
-      { headers: getSupabaseHeaders(token) }
+      { headers: getSupabaseHeaders() }
     );
     res.json(response.data || []);
   } catch (error) {
@@ -233,10 +232,9 @@ app.get('/api/residents', async (req, res) => {
 // Get resident stats
 app.get('/api/residents/stats', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     const response = await axios.get(
       `${SUPABASE_URL}/rest/v1/residents?select=status`,
-      { headers: getSupabaseHeaders(token) }
+      { headers: getSupabaseHeaders() }
     );
     
     const residents = response.data || [];
@@ -254,10 +252,9 @@ app.get('/api/residents/stats', async (req, res) => {
 // Get single resident
 app.get('/api/residents/:id', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     const response = await axios.get(
       `${SUPABASE_URL}/rest/v1/residents?id=eq.${req.params.id}&select=*`,
-      { headers: getSupabaseHeaders(token) }
+      { headers: getSupabaseHeaders() }
     );
     
     if (response.data?.length === 0) {
@@ -272,12 +269,11 @@ app.get('/api/residents/:id', async (req, res) => {
 // Update resident status
 app.put('/api/residents/:id/status', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     const { status } = req.body;
     const response = await axios.patch(
       `${SUPABASE_URL}/rest/v1/residents?id=eq.${req.params.id}`,
       { status, last_updated: new Date().toISOString() },
-      { headers: { ...getSupabaseHeaders(token), 'Prefer': 'return=representation' } }
+      { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=representation' } }
     );
     res.json(response.data[0]);
   } catch (error) {
@@ -288,11 +284,10 @@ app.put('/api/residents/:id/status', async (req, res) => {
 // Reset all statuses
 app.post('/api/residents/reset', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     await axios.patch(
       `${SUPABASE_URL}/rest/v1/residents`,
       { status: 'no_response', last_updated: new Date().toISOString() },
-      { headers: getSupabaseHeaders(token) }
+      { headers: getSupabaseHeaders() }
     );
     res.json({ message: 'All statuses reset successfully' });
   } catch (error) {
@@ -305,10 +300,9 @@ app.post('/api/residents/reset', async (req, res) => {
 // Get all alerts
 app.get('/api/alerts', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     const response = await axios.get(
       `${SUPABASE_URL}/rest/v1/alerts?order=created_at.desc`,
-      { headers: getSupabaseHeaders(token) }
+      { headers: getSupabaseHeaders() }
     );
     res.json(response.data || []);
   } catch (error) {
@@ -320,10 +314,9 @@ app.get('/api/alerts', async (req, res) => {
 // Get active alerts
 app.get('/api/alerts/active', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     const response = await axios.get(
       `${SUPABASE_URL}/rest/v1/alerts?status=eq.active&order=created_at.desc`,
-      { headers: getSupabaseHeaders(token) }
+      { headers: getSupabaseHeaders() }
     );
     res.json(response.data || []);
   } catch (error) {
@@ -334,7 +327,6 @@ app.get('/api/alerts/active', async (req, res) => {
 // Create alert
 app.post('/api/alerts', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     const alertData = {
       ...req.body,
       status: 'active',
@@ -344,14 +336,14 @@ app.post('/api/alerts', async (req, res) => {
     const response = await axios.post(
       `${SUPABASE_URL}/rest/v1/alerts`,
       alertData,
-      { headers: { ...getSupabaseHeaders(token), 'Prefer': 'return=representation' } }
+      { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=representation' } }
     );
 
     // Send SMS to all residents
     try {
       const residentsResponse = await axios.get(
         `${SUPABASE_URL}/rest/v1/residents?select=contact_number`,
-        { headers: getSupabaseHeaders(token) }
+        { headers: getSupabaseHeaders() }
       );
       
       const phoneNumbers = residentsResponse.data?.map(r => r.contact_number).filter(Boolean) || [];
@@ -372,11 +364,10 @@ app.post('/api/alerts', async (req, res) => {
 // Resolve alert
 app.put('/api/alerts/:id/resolve', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     const response = await axios.patch(
       `${SUPABASE_URL}/rest/v1/alerts?id=eq.${req.params.id}`,
       { status: 'resolved', resolved_at: new Date().toISOString() },
-      { headers: { ...getSupabaseHeaders(token), 'Prefer': 'return=representation' } }
+      { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=representation' } }
     );
     res.json(response.data[0]);
   } catch (error) {
@@ -387,11 +378,10 @@ app.put('/api/alerts/:id/resolve', async (req, res) => {
 // Cancel alert
 app.put('/api/alerts/:id/cancel', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     const response = await axios.patch(
       `${SUPABASE_URL}/rest/v1/alerts?id=eq.${req.params.id}`,
       { status: 'cancelled', resolved_at: new Date().toISOString() },
-      { headers: { ...getSupabaseHeaders(token), 'Prefer': 'return=representation' } }
+      { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=representation' } }
     );
     res.json(response.data[0]);
   } catch (error) {
@@ -402,20 +392,18 @@ app.put('/api/alerts/:id/cancel', async (req, res) => {
 // Reset system
 app.post('/api/alerts/reset', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-    
     // Cancel all active alerts
     await axios.patch(
       `${SUPABASE_URL}/rest/v1/alerts?status=eq.active`,
       { status: 'cancelled', resolved_at: new Date().toISOString() },
-      { headers: getSupabaseHeaders(token) }
+      { headers: getSupabaseHeaders() }
     );
 
     // Reset all resident statuses
     await axios.patch(
       `${SUPABASE_URL}/rest/v1/residents`,
       { status: 'no_response', last_updated: new Date().toISOString() },
-      { headers: getSupabaseHeaders(token) }
+      { headers: getSupabaseHeaders() }
     );
 
     res.json({ message: 'System reset successfully' });
@@ -475,7 +463,6 @@ app.post('/api/sms/send', async (req, res) => {
 // Broadcast SMS to all residents
 app.post('/api/sms/broadcast', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
     const { message } = req.body;
     
     if (!message) {
@@ -485,7 +472,37 @@ app.post('/api/sms/broadcast', async (req, res) => {
     // Get all residents with contact numbers
     const response = await axios.get(
       `${SUPABASE_URL}/rest/v1/residents?select=contact_number&contact_number=not.is.null`,
-      { headers: getSupabaseHeaders(token) }
+      { headers: getSupabaseHeaders() }
+    );
+
+    const residents = response.data || [];
+    const phoneNumbers = residents.map(r => r.contact_number).filter(Boolean);
+
+    if (phoneNumbers.length === 0) {
+      return res.status(400).json({ message: 'No residents with contact numbers found' });
+    }
+
+    const result = await sendBulkSMS(phoneNumbers, message);
+    res.json({ success: true, message: `SMS sent to ${phoneNumbers.length} residents`, count: phoneNumbers.length });
+  } catch (error) {
+    console.error('Broadcast SMS error:', error.message);
+    res.status(500).json({ message: 'Failed to broadcast SMS' });
+  }
+});
+
+// Broadcast SMS to all residents
+app.post('/api/sms/broadcast', async (req, res) => {
+  try {
+    const { message } = req.body;
+    
+    if (!message) {
+      return res.status(400).json({ message: 'Message is required' });
+    }
+
+    // Get all residents with contact numbers
+    const response = await axios.get(
+      `${SUPABASE_URL}/rest/v1/residents?select=contact_number&contact_number=not.is.null`,
+      { headers: getSupabaseHeaders() }
     );
 
     const residents = response.data || [];
@@ -561,7 +578,7 @@ app.post('/api/emergency-reports', async (req, res) => {
     // Get user from token
     const userResponse = await axios.get(
       `${SUPABASE_URL}/auth/v1/user`,
-      { headers: getSupabaseHeaders(token) }
+      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}` } }
     );
 
     const user = userResponse.data;
@@ -575,7 +592,7 @@ app.post('/api/emergency-reports', async (req, res) => {
         location: req.body.location,
         status: 'pending'
       },
-      { headers: { ...getSupabaseHeaders(token), 'Prefer': 'return=representation' } }
+      { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=representation' } }
     );
 
     res.status(201).json(response.data[0]);
@@ -588,18 +605,32 @@ app.post('/api/emergency-reports', async (req, res) => {
 // Get all emergency reports (admin only)
 app.get('/api/emergency-reports', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ message: 'Authentication required' });
-
     const response = await axios.get(
       `${SUPABASE_URL}/rest/v1/emergency_reports?order=created_at.desc`,
-      { headers: getSupabaseHeaders(token) }
+      { headers: getSupabaseHeaders() }
     );
-
     res.json(response.data || []);
   } catch (error) {
     console.error('Get emergency reports error:', error.response?.data || error.message);
     res.json([]);
+  }
+});
+
+// Update emergency report status
+app.put('/api/emergency-reports/:id', async (req, res) => {
+  try {
+    const response = await axios.patch(
+      `${SUPABASE_URL}/rest/v1/emergency_reports?id=eq.${req.params.id}`,
+      { 
+        status: req.body.status,
+        updated_at: new Date().toISOString()
+      },
+      { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=representation' } }
+    );
+    res.json(response.data[0]);
+  } catch (error) {
+    console.error('Update emergency report error:', error.response?.data || error.message);
+    res.status(400).json({ message: 'Failed to update emergency report' });
   }
 });
 
