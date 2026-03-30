@@ -7,12 +7,9 @@ import StatsCard from '@/components/ui/StatsCard';
 import Card, { CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
-import Modal from '@/components/ui/Modal';
-import Select from '@/components/ui/Select';
-import Input from '@/components/ui/Input';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/Table';
 import api from '@/lib/api';
-import { Resident, ResidentStats, Alert, EMERGENCY_TYPES, ALERT_LEVELS, CreateAlertData } from '@/types';
+import { Resident, ResidentStats, Alert } from '@/types';
 
 interface EmergencyReport {
   id: string;
@@ -31,14 +28,6 @@ export default function DashboardPage() {
   const [emergencyReports, setEmergencyReports] = useState<EmergencyReport[]>([]);
   const [loading, setLoading] = useState(true);
   const [resetLoading, setResetLoading] = useState(false);
-  const [alertModalOpen, setAlertModalOpen] = useState(false);
-  const [alertForm, setAlertForm] = useState<CreateAlertData>({
-    emergency_type: 'Fire',
-    location: '',
-    alert_level: 'medium',
-    instructions: '',
-  });
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -75,26 +64,6 @@ export default function DashboardPage() {
       console.error('Failed to reset system:', error);
     } finally {
       setResetLoading(false);
-    }
-  };
-
-  const handleCreateAlert = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      await api.post('/alerts', alertForm);
-      setAlertModalOpen(false);
-      setAlertForm({
-        emergency_type: 'Fire',
-        location: '',
-        alert_level: 'medium',
-        instructions: '',
-      });
-      await fetchData();
-    } catch (error) {
-      console.error('Failed to create alert:', error);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -179,12 +148,6 @@ export default function DashboardPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Current Emergency Status</CardTitle>
-                <Button size="sm" onClick={() => setAlertModalOpen(true)}>
-                  <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                  </svg>
-                  New Alert
-                </Button>
               </CardHeader>
               <CardContent>
                 {residents.length === 0 ? (
@@ -370,76 +333,6 @@ export default function DashboardPage() {
           </Card>
         </div>
       </div>
-
-      {/* New Alert Modal */}
-      <Modal
-        isOpen={alertModalOpen}
-        onClose={() => setAlertModalOpen(false)}
-        title="New Emergency Alert"
-        description="Create and send an emergency alert to all residents"
-        size="lg"
-        variant="danger"
-      >
-        <form onSubmit={handleCreateAlert} className="space-y-5">
-          <Select
-            label="Type of Emergency"
-            value={alertForm.emergency_type}
-            onChange={(e) => setAlertForm({ ...alertForm, emergency_type: e.target.value })}
-            options={EMERGENCY_TYPES.map((type) => ({ value: type, label: type }))}
-          />
-
-          <Input
-            label="Location / Zone"
-            placeholder="e.g. Zone 4, Balugo"
-            value={alertForm.location}
-            onChange={(e) => setAlertForm({ ...alertForm, location: e.target.value })}
-            required
-          />
-
-          <Select
-            label="Alert Level"
-            value={alertForm.alert_level}
-            onChange={(e) => setAlertForm({ ...alertForm, alert_level: e.target.value as any })}
-            options={ALERT_LEVELS.map((level) => ({
-              value: level,
-              label: level.charAt(0).toUpperCase() + level.slice(1),
-            }))}
-          />
-
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Instructions for Residents
-            </label>
-            <textarea
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
-              rows={3}
-              placeholder="Evacuate immediately to..."
-              value={alertForm.instructions}
-              onChange={(e) => setAlertForm({ ...alertForm, instructions: e.target.value })}
-              required
-            />
-          </div>
-
-          <div className="flex gap-3 pt-2">
-            <Button
-              type="button"
-              variant="secondary"
-              className="flex-1"
-              onClick={() => setAlertModalOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="danger"
-              className="flex-1"
-              loading={submitting}
-            >
-              Validate & Send Alert
-            </Button>
-          </div>
-        </form>
-      </Modal>
     </DashboardLayout>
   );
 }

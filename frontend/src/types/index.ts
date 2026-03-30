@@ -95,3 +95,53 @@ export const EMERGENCY_TYPES: EmergencyType[] = [
 ];
 
 export const ALERT_LEVELS: AlertLevel[] = ['low', 'medium', 'high', 'critical'];
+
+export type LogLevel = 'info' | 'warning' | 'error';
+
+export type ActionType = 
+  | 'login'
+  | 'logout'
+  | 'register'
+  | 'alert_create'
+  | 'alert_resolve'
+  | 'alert_cancel'
+  | 'alert_bulk_resolve'
+  | 'alert_bulk_cancel'
+  | 'resident_create'
+  | 'resident_update'
+  | 'resident_delete'
+  | 'resident_status_update'
+  | 'system_reset'
+  | 'sms_sent'
+  | 'sms_failed';
+
+export interface SystemLog {
+  id: string;
+  action: ActionType;
+  level: LogLevel;
+  description: string;
+  admin_id?: string;
+  admin_email?: string;
+  entity_type?: string;
+  entity_id?: string;
+  metadata?: string;
+  created_at: string;
+}
+
+export interface LogFilter {
+  action?: ActionType;
+  level?: LogLevel;
+  admin_id?: string;
+  start_date?: string;
+  end_date?: string;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}
+
+export interface LogStats {
+  total: number;
+  today: number;
+  byLevel: Record<string, number>;
+  byAction: Record<string, number>;
+}
