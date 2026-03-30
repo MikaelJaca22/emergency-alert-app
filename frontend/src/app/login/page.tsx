@@ -26,9 +26,9 @@ function LoginForm() {
       await login(formData);
       const role = localStorage.getItem('user_role');
       if (role === 'admin') {
-        router.push('/dashboard');
+        window.location.href = '/dashboard';
       } else {
-        router.push('/report-emergency');
+        window.location.href = '/report-emergency';
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Invalid credentials');

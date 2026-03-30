@@ -24,7 +24,7 @@ function AdminLoginForm() {
 
     try {
       await login(formData);
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
     } catch (err: any) {
       setError(err.response?.data?.message || 'Invalid credentials');
     } finally {

@@ -48,7 +48,7 @@ function RegisterForm() {
         contact_number: formData.contact_number,
         address: formData.address,
       });
-      router.push('/report-emergency');
+      window.location.href = '/report-emergency';
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed');
     } finally {

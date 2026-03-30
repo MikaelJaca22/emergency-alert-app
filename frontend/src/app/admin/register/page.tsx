@@ -44,8 +44,7 @@ function AdminRegisterForm() {
         username: formData.email.split('@')[0],
         role: 'admin',
       });
-      const role = localStorage.getItem('user_role');
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed');
     } finally {
