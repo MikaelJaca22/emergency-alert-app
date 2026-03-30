@@ -36,7 +36,7 @@ const StatsCard = forwardRef<HTMLDivElement, StatsCardProps>(
       <div
         ref={ref}
         className={cn(
-          'bg-white rounded-xl p-5 border-l-4 shadow-sm transition-all duration-200 hover:shadow-md',
+          'bg-white rounded-xl p-5 border-l-4 shadow-sm transition-all duration-250 ease-out hover:shadow-md',
           borderColors[variant],
           className
         )}

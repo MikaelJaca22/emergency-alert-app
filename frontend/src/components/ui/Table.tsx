@@ -45,7 +45,7 @@ export function TableBody({ className, children, ...props }: HTMLAttributes<HTML
 
 export function TableRow({ className, children, ...props }: HTMLAttributes<HTMLTableRowElement>) {
   return (
-    <tr className={cn('hover:bg-slate-50 transition-colors', className)} {...props}>
+    <tr className={cn('hover:bg-slate-50 transition-colors duration-150', className)} {...props}>
       {children}
     </tr>
   );
