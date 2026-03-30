@@ -39,6 +39,20 @@ app.post('/api/auth/register', async (req, res) => {
     const generatedFullName = full_name || email.split('@')[0];
     const userRole = role || 'user';
     
+    // Check if email already exists in users table
+    try {
+      const existingUser = await axios.get(
+        `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id`,
+        { headers: getSupabaseHeaders() }
+      );
+      
+      if (existingUser.data && existingUser.data.length > 0) {
+        return res.status(400).json({ message: 'Email already registered. Please login instead.' });
+      }
+    } catch (checkError) {
+      // Continue with registration if check fails
+    }
+
     // Register with Supabase Auth
     const authResponse = await axios.post(
       `${SUPABASE_URL}/auth/v1/signup`,
@@ -46,10 +60,15 @@ app.post('/api/auth/register', async (req, res) => {
       { headers: getSupabaseHeaders() }
     );
 
+    // Check if auth signup returned an error (user already exists)
+    if (authResponse.data?.user === null) {
+      return res.status(400).json({ message: 'Email already registered. Please login instead.' });
+    }
+
     const user = authResponse.data.user;
     const access_token = authResponse.data.session?.access_token;
 
-    // Create user profile
+    // Create user profile with upsert (insert or update if exists)
     const profileData = { 
       id: user.id, 
       email, 
@@ -64,13 +83,13 @@ app.post('/api/auth/register', async (req, res) => {
       await axios.post(
         `${SUPABASE_URL}/rest/v1/users`,
         profileData,
-        { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=minimal' } }
+        { headers: { ...getSupabaseHeaders(), 'Prefer': 'resolution=merge-duplicates' } }
       );
     } catch (profileError) {
       console.error('Profile creation error:', profileError.response?.data);
     }
 
-    // Auto-create resident for regular users (not admins)
+    // Auto-create resident for regular users (not admins) with upsert
     if (userRole !== 'admin') {
       try {
         await axios.post(
@@ -82,7 +101,7 @@ app.post('/api/auth/register', async (req, res) => {
             address: address || '',
             status: 'no_response'
           },
-          { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=minimal' } }
+          { headers: { ...getSupabaseHeaders(), 'Prefer': 'resolution=merge-duplicates' } }
         );
       } catch (residentError) {
         console.error('Resident creation error:', residentError.response?.data);
