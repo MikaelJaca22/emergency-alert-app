@@ -28,8 +28,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const response = await api.get<User>('/auth/me');
         setUser(response.data);
-      } catch {
+      } catch (error) {
+        console.log('Auth check failed, clearing token');
         localStorage.removeItem('access_token');
+        localStorage.removeItem('user_role');
       }
     }
     setLoading(false);
