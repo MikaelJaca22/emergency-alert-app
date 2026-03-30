@@ -46,7 +46,7 @@ export default function ResidentsPage() {
       />
 
       <div className="p-6">
-        <Card>
+        <Card className="animate-slide-up">
           <CardHeader>
             <CardTitle>Resident Directory</CardTitle>
           </CardHeader>

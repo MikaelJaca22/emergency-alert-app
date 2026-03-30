@@ -124,7 +124,7 @@ export default function SMSPage() {
           </div>
 
           {activeTab === 'individual' ? (
-            <Card>
+            <Card className="animate-slide-up">
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-blue-100 rounded-lg">
@@ -244,7 +244,7 @@ export default function SMSPage() {
               </CardContent>
             </Card>
           ) : (
-            <Card>
+            <Card className="animate-slide-up">
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-orange-100 rounded-lg">
@@ -335,7 +335,7 @@ export default function SMSPage() {
           )}
 
           {/* Residents List */}
-          <Card className="mt-6">
+          <Card className="mt-6 animate-slide-up stagger-2">
             <CardHeader>
               <CardTitle>Registered Residents</CardTitle>
             </CardHeader>

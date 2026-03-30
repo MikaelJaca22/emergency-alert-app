@@ -175,64 +175,72 @@ export default function LogsPage() {
 
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-slate-500 rounded-lg">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
+          <div className="animate-slide-up stagger-1">
+            <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-slate-500 rounded-lg">
+                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-slate-500">Total Logs</p>
+                  <p className="text-xl font-bold text-slate-900">{stats.total}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-medium text-slate-500">Total Logs</p>
-                <p className="text-xl font-bold text-slate-900">{stats.total}</p>
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </div>
 
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-500 rounded-lg">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+          <div className="animate-slide-up stagger-2">
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-500 rounded-lg">
+                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-blue-500">Today</p>
+                  <p className="text-xl font-bold text-blue-900">{stats.today}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-medium text-blue-500">Today</p>
-                <p className="text-xl font-bold text-blue-900">{stats.today}</p>
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </div>
 
-          <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-yellow-500 rounded-lg">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
+          <div className="animate-slide-up stagger-3">
+            <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-yellow-500 rounded-lg">
+                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-yellow-500">Warnings</p>
+                  <p className="text-xl font-bold text-yellow-900">{stats.byLevel?.warning || 0}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-medium text-yellow-500">Warnings</p>
-                <p className="text-xl font-bold text-yellow-900">{stats.byLevel?.warning || 0}</p>
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </div>
 
-          <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-red-500 rounded-lg">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+          <div className="animate-slide-up stagger-4">
+            <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-red-500 rounded-lg">
+                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-red-500">Errors</p>
+                  <p className="text-xl font-bold text-red-900">{stats.byLevel?.error || 0}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-medium text-red-500">Errors</p>
-                <p className="text-xl font-bold text-red-900">{stats.byLevel?.error || 0}</p>
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </div>
         </div>
 
-        <Card>
+        <Card className="animate-slide-up stagger-5">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Filters</CardTitle>
             <div className="flex gap-2">
@@ -293,7 +301,7 @@ export default function LogsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-slide-up stagger-6">
           <CardHeader>
             <CardTitle>System Activity ({total} total entries)</CardTitle>
           </CardHeader>

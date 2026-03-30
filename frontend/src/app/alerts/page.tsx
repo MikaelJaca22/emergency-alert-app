@@ -231,7 +231,8 @@ export default function AlertsPage() {
 
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
+          <div className="animate-slide-up stagger-1">
+            <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-slate-500 rounded-lg">
                 <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -244,7 +245,9 @@ export default function AlertsPage() {
               </div>
             </div>
           </Card>
+          </div>
 
+          <div className="animate-slide-up stagger-2">
           <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-red-500 rounded-lg">
@@ -258,7 +261,9 @@ export default function AlertsPage() {
               </div>
             </div>
           </Card>
+          </div>
 
+          <div className="animate-slide-up stagger-3">
           <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-green-500 rounded-lg">
@@ -272,7 +277,9 @@ export default function AlertsPage() {
               </div>
             </div>
           </Card>
+          </div>
 
+          <div className="animate-slide-up stagger-4">
           <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gray-500 rounded-lg">
@@ -286,9 +293,10 @@ export default function AlertsPage() {
               </div>
             </div>
           </Card>
+          </div>
         </div>
 
-        <Card>
+        <Card className="animate-slide-up stagger-5">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Filters</CardTitle>
             <div className="flex gap-2">
@@ -377,7 +385,7 @@ export default function AlertsPage() {
           </Card>
         )}
 
-        <Card>
+        <Card className="animate-slide-up stagger-6">
           <CardHeader>
             <CardTitle>Alert History ({filteredAlerts.length} results)</CardTitle>
           </CardHeader>

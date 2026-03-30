@@ -99,52 +99,60 @@ export default function DashboardPage() {
       <div className="p-6">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
-          <StatsCard
-            title="Total Residents"
-            value={stats.total}
-            variant="primary"
-            icon={
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-            }
-          />
-          <StatsCard
-            title="Safe"
-            value={stats.safe}
-            variant="success"
-            icon={
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            }
-          />
-          <StatsCard
-            title="Need Help"
-            value={stats.needs_help}
-            variant="danger"
-            icon={
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            }
-          />
-          <StatsCard
-            title="No Response"
-            value={stats.no_response}
-            variant="warning"
-            icon={
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            }
-          />
+          <div className="animate-slide-up stagger-1">
+            <StatsCard
+              title="Total Residents"
+              value={stats.total}
+              variant="primary"
+              icon={
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              }
+            />
+          </div>
+          <div className="animate-slide-up stagger-2">
+            <StatsCard
+              title="Safe"
+              value={stats.safe}
+              variant="success"
+              icon={
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              }
+            />
+          </div>
+          <div className="animate-slide-up stagger-3">
+            <StatsCard
+              title="Need Help"
+              value={stats.needs_help}
+              variant="danger"
+              icon={
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              }
+            />
+          </div>
+          <div className="animate-slide-up stagger-4">
+            <StatsCard
+              title="No Response"
+              value={stats.no_response}
+              variant="warning"
+              icon={
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              }
+            />
+          </div>
         </div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Current Emergency Status */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 animate-slide-up stagger-5">
             <Card>
               <CardHeader>
                 <CardTitle>Current Emergency Status</CardTitle>
@@ -186,7 +194,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Dispatch & Decisions */}
-          <div>
+          <div className="animate-slide-up stagger-6">
             <Card>
               <CardHeader>
                 <CardTitle>Dispatch & Decisions</CardTitle>
@@ -247,7 +255,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Emergency Reports from Residents */}
-        <div className="mt-6">
+        <div className="mt-6 animate-slide-up stagger-6">
           <Card>
             <CardHeader>
               <CardTitle>Emergency Reports from Residents</CardTitle>
