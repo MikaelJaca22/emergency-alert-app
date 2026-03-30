@@ -1,6 +1,6 @@
 'use client';
 
-import { HTMLAttributes, forwardRef } from 'react';
+import { HTMLAttributes, forwardRef, memo } from 'react';
 import { cn } from '@/lib/utils';
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
@@ -9,7 +9,7 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   dot?: boolean;
 }
 
-const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
+const Badge = memo(forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, variant = 'default', size = 'md', dot = false, children, ...props }, ref) => {
     const variants = {
       default: 'bg-slate-100 text-slate-700',
@@ -50,7 +50,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       </span>
     );
   }
-);
+));
 
 Badge.displayName = 'Badge';
 

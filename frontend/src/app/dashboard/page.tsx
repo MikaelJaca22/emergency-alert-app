@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import Header from '@/components/layout/Header';
 import StatsCard from '@/components/ui/StatsCard';
@@ -52,7 +52,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleResetSystem = async () => {
+  const handleResetSystem = useCallback(async () => {
     if (!confirm('Are you sure you want to reset the system? This will clear all active alerts and reset resident statuses.')) {
       return;
     }
@@ -65,9 +65,9 @@ export default function DashboardPage() {
     } finally {
       setResetLoading(false);
     }
-  };
+  }, []);
 
-  const getStatusBadge = (status: Resident['status']) => {
+  const getStatusBadge = useCallback((status: Resident['status']) => {
     const variants = {
       safe: { variant: 'success' as const, label: 'Safe' },
       needs_help: { variant: 'danger' as const, label: 'Needs Help' },
@@ -75,7 +75,7 @@ export default function DashboardPage() {
     };
     const { variant, label } = variants[status];
     return <Badge variant={variant} dot>{label}</Badge>;
-  };
+  }, []);
 
   return (
     <DashboardLayout>

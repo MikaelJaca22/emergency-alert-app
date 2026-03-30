@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -60,10 +60,23 @@ const navigation: NavItem[] = [
   },
 ];
 
-export default function Sidebar() {
+const Sidebar = memo(function Sidebar() {
   const pathname = usePathname();
   const { logout, user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+
+  const handleLogout = useCallback(() => {
+    logout();
+  }, [logout]);
+
+  const handleToggle = useCallback(() => {
+    setCollapsed(prev => !prev);
+  }, []);
+
+  const navItems = useMemo(() => navigation.map(item => ({
+    ...item,
+    isActive: pathname === item.href || pathname?.startsWith(item.href + '/')
+  })), [pathname]);
 
   return (
     <aside
@@ -88,7 +101,7 @@ export default function Sidebar() {
           )}
         </div>
         <button
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={handleToggle}
           className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors"
         >
           <svg className={cn('w-5 h-5 transition-transform', collapsed && 'rotate-180')} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,22 +112,20 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1">
-        {navigation.map((item) => {
-          const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
-          return (
+        {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               className={cn(
                 'flex items-center px-3 py-2.5 rounded-xl transition-all duration-200 group',
-                isActive
+                item.isActive
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
                   : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
               )}
             >
               <span className={cn(
                 'flex-shrink-0 transition-colors',
-                isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'
+                item.isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'
               )}>
                 {item.icon}
               </span>
@@ -122,8 +133,7 @@ export default function Sidebar() {
                 <span className="ml-3 font-medium">{item.name}</span>
               )}
             </Link>
-          );
-        })}
+          ))}
       </nav>
 
       {/* User section */}
@@ -145,7 +155,7 @@ export default function Sidebar() {
         </div>
         {!collapsed && (
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="mt-3 w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -157,4 +167,6 @@ export default function Sidebar() {
       </div>
     </aside>
   );
-}
+});
+
+export default Sidebar;
