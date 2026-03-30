@@ -14,10 +14,21 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '@
 import api from '@/lib/api';
 import { Resident, ResidentStats, Alert, EMERGENCY_TYPES, ALERT_LEVELS, CreateAlertData } from '@/types';
 
+interface EmergencyReport {
+  id: string;
+  user_id: string;
+  emergency_type: string;
+  description: string;
+  location: string;
+  status: string;
+  created_at: string;
+}
+
 export default function DashboardPage() {
   const [stats, setStats] = useState<ResidentStats>({ total: 0, safe: 0, needs_help: 0, no_response: 0 });
   const [residents, setResidents] = useState<Resident[]>([]);
   const [activeAlerts, setActiveAlerts] = useState<Alert[]>([]);
+  const [emergencyReports, setEmergencyReports] = useState<EmergencyReport[]>([]);
   const [loading, setLoading] = useState(true);
   const [resetLoading, setResetLoading] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
@@ -35,14 +46,16 @@ export default function DashboardPage() {
 
   const fetchData = async () => {
     try {
-      const [statsRes, residentsRes, alertsRes] = await Promise.all([
+      const [statsRes, residentsRes, alertsRes, reportsRes] = await Promise.all([
         api.get('/residents/stats'),
         api.get('/residents'),
         api.get('/alerts/active'),
+        api.get('/emergency-reports'),
       ]);
       setStats(statsRes.data);
-      setResidents(residentsRes.data.slice(0, 5)); // Show only first 5
+      setResidents(residentsRes.data.slice(0, 5));
       setActiveAlerts(alertsRes.data);
+      setEmergencyReports(reportsRes.data);
     } catch (error) {
       console.error('Failed to fetch data:', error);
     } finally {
@@ -268,6 +281,102 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* Emergency Reports from Residents */}
+        <div className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Emergency Reports from Residents</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {emergencyReports.length === 0 ? (
+                <div className="text-center py-8 bg-slate-50 rounded-xl">
+                  <svg className="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <p className="text-slate-500">No emergency reports from residents yet.</p>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Location</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Reported</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {emergencyReports.map((report) => (
+                      <TableRow key={report.id}>
+                        <TableCell className="font-medium">{report.emergency_type}</TableCell>
+                        <TableCell>{report.location || '-'}</TableCell>
+                        <TableCell className="max-w-xs truncate">{report.description}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              report.status === 'resolved' ? 'success' : 
+                              report.status === 'acknowledged' ? 'primary' : 'warning'
+                            }
+                            dot
+                          >
+                            {report.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-slate-500">
+                          {new Date(report.created_at).toLocaleString()}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            {report.status === 'pending' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={async () => {
+                                  await api.put(`/emergency-reports/${report.id}`, { status: 'acknowledged' });
+                                  await fetchData();
+                                }}
+                              >
+                                <svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </Button>
+                            )}
+                            {report.status !== 'resolved' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={async () => {
+                                  await api.put(`/emergency-reports/${report.id}`, { status: 'resolved' });
+                                  await fetchData();
+                                }}
+                              >
+                                <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
 

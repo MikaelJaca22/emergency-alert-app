@@ -6,6 +6,7 @@ export interface AuthUser {
   email: string;
   username?: string;
   full_name?: string;
+  role?: string;
 }
 
 export interface RegisterDto {
@@ -13,6 +14,7 @@ export interface RegisterDto {
   password: string;
   username: string;
   full_name: string;
+  role?: 'admin' | 'user';
 }
 
 export interface LoginDto {
@@ -27,14 +29,17 @@ export class AuthService {
   async register(dto: RegisterDto): Promise<{ user: AuthUser; access_token: string }> {
     const supabase = this.supabaseService.getClient();
     
+    const username = dto.username || dto.email.split('@')[0];
+    const fullName = dto.full_name || dto.email.split('@')[0];
+
     // Register user with Supabase Auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: dto.email,
       password: dto.password,
       options: {
         data: {
-          username: dto.username,
-          full_name: dto.full_name,
+          username: username,
+          full_name: fullName,
         },
       },
     });
@@ -47,9 +52,9 @@ export class AuthService {
     const { error: profileError } = await supabase.from('users').insert({
       id: authData.user.id,
       email: dto.email,
-      username: dto.username,
-      full_name: dto.full_name,
-      role: 'admin',
+      username: username,
+      full_name: fullName,
+      role: dto.role || 'user',
     });
 
     if (profileError) {
@@ -60,8 +65,9 @@ export class AuthService {
       user: {
         id: authData.user.id,
         email: authData.user.email,
-        username: dto.username,
-        full_name: dto.full_name,
+        username: username,
+        full_name: fullName,
+        role: dto.role || 'user',
       },
       access_token: authData.session.access_token,
     };
@@ -92,6 +98,7 @@ export class AuthService {
         email: data.user.email,
         username: profile?.username,
         full_name: profile?.full_name,
+        role: profile?.role,
       },
       access_token: data.session.access_token,
     };
@@ -123,6 +130,7 @@ export class AuthService {
       email: data.user.email,
       username: profile?.username,
       full_name: profile?.full_name,
+      role: profile?.role,
     };
   }
 }

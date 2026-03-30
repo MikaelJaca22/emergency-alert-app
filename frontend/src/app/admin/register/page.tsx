@@ -7,7 +7,7 @@ import { AuthProvider, useAuth } from '@/hooks/useAuth';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 
-function RegisterForm() {
+function AdminRegisterForm() {
   const { register } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -17,8 +17,6 @@ function RegisterForm() {
     email: '',
     password: '',
     confirmPassword: '',
-    contact_number: '',
-    address: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,11 +42,10 @@ function RegisterForm() {
         email: formData.email,
         password: formData.password,
         username: formData.email.split('@')[0],
-        role: 'user',
-        contact_number: formData.contact_number,
-        address: formData.address,
+        role: 'admin',
       });
-      router.push('/report-emergency');
+      const role = localStorage.getItem('user_role');
+      router.push('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed');
     } finally {
@@ -76,12 +73,12 @@ function RegisterForm() {
               </svg>
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">
-              Create
+              Create Admin
               <br />
               Account
             </h1>
             <p className="text-lg text-green-100/70 max-w-md mx-auto">
-              Register to receive emergency alerts and stay connected with your community.
+              Register as a barangay administrator to manage emergency alerts and resident safety.
             </p>
           </div>
         </div>
@@ -100,8 +97,8 @@ function RegisterForm() {
           </div>
 
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-900">Create your account</h2>
-            <p className="text-slate-500 mt-2">Register to receive emergency alerts</p>
+            <h2 className="text-2xl font-bold text-slate-900">Create Admin Account</h2>
+            <p className="text-slate-500 mt-2">Register as a barangay administrator</p>
           </div>
 
           {error && (
@@ -131,40 +128,13 @@ function RegisterForm() {
             <Input
               label="Email Address"
               type="email"
-              placeholder="user@example.com"
+              placeholder="admin@example.com"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
               icon={
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              }
-            />
-
-            <Input
-              label="Contact Number"
-              type="tel"
-              placeholder="09123456789"
-              value={formData.contact_number}
-              onChange={(e) => setFormData({ ...formData, contact_number: e.target.value })}
-              icon={
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-              }
-            />
-
-            <Input
-              label="Address"
-              type="text"
-              placeholder="Purok/Block, Barangay"
-              value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-              icon={
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               }
             />
@@ -198,21 +168,23 @@ function RegisterForm() {
             />
 
             <Button type="submit" loading={loading} className="w-full" size="lg" variant="success">
-              Create Account
+              Create Admin Account
             </Button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-slate-500">
-              Already have an account?{' '}
-              <Link href="/login" className="text-green-600 hover:text-green-700 font-medium">
+              Already have an admin account?{' '}
+              <Link href="/admin/login" className="text-green-600 hover:text-green-700 font-medium">
                 Sign in
               </Link>
             </p>
-            <p className="text-slate-400 text-sm mt-2">
-              Admin?{' '}
-              <Link href="/admin/register" className="text-green-600 hover:text-green-700 font-medium">
-                Register here
+            <p className="text-slate-400 text-sm mt-3">
+              <Link href="/register" className="text-green-500 hover:text-green-600 font-medium inline-flex items-center gap-1">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to user registration
               </Link>
             </p>
           </div>
@@ -222,10 +194,10 @@ function RegisterForm() {
   );
 }
 
-export default function RegisterPage() {
+export default function AdminRegisterPage() {
   return (
     <AuthProvider>
-      <RegisterForm />
+      <AdminRegisterForm />
     </AuthProvider>
   );
 }

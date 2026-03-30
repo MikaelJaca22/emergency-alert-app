@@ -39,6 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const response = await api.post<AuthResponse>('/auth/login', credentials);
     const { user, access_token } = response.data;
     localStorage.setItem('access_token', access_token);
+    localStorage.setItem('user_role', user.role || 'user');
     setUser(user);
   };
 
@@ -46,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const response = await api.post<AuthResponse>('/auth/register', data);
     const { user, access_token } = response.data;
     localStorage.setItem('access_token', access_token);
+    localStorage.setItem('user_role', user.role || 'user');
     setUser(user);
   };
 

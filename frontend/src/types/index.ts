@@ -3,6 +3,9 @@ export interface User {
   email: string;
   username: string;
   full_name: string;
+  contact_number?: string;
+  address?: string;
+  role?: string;
 }
 
 export interface Resident {
@@ -49,6 +52,9 @@ export interface RegisterData {
   password: string;
   username: string;
   full_name: string;
+  role?: 'admin' | 'user';
+  contact_number?: string;
+  address?: string;
 }
 
 export interface CreateResidentData {

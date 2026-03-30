@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { ResidentsService, CreateResidentDto, UpdateResidentDto } from './residents.service';
-import { JwtAuthGuard } from '../shared/guards/jwt-auth.guard';
+import { AdminGuard } from '../shared/guards/admin.guard';
 
 @ApiTags('Residents')
 @Controller('residents')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AdminGuard)
 @ApiBearerAuth()
 export class ResidentsController {
   constructor(private residentsService: ResidentsService) {}

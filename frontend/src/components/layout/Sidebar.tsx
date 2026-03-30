@@ -41,7 +41,7 @@ const navigation: NavItem[] = [
     ),
   },
   {
-    name: 'SMS Simulator',
+    name: 'SMS Messaging',
     href: '/simulator',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

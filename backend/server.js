@@ -33,12 +33,16 @@ const getSupabaseHeaders = (token = '') => ({
 // Register
 app.post('/api/auth/register', async (req, res) => {
   try {
-    const { email, password, username, full_name } = req.body;
+    const { email, password, username, full_name, role, contact_number, address } = req.body;
+    
+    const generatedUsername = username || email.split('@')[0];
+    const generatedFullName = full_name || email.split('@')[0];
+    const userRole = role || 'user';
     
     // Register with Supabase Auth
     const authResponse = await axios.post(
       `${SUPABASE_URL}/auth/v1/signup`,
-      { email, password, options: { data: { username, full_name } } },
+      { email, password, options: { data: { username: generatedUsername, full_name: generatedFullName } } },
       { headers: getSupabaseHeaders() }
     );
 
@@ -46,13 +50,57 @@ app.post('/api/auth/register', async (req, res) => {
     const access_token = authResponse.data.session?.access_token;
 
     // Create user profile
-    await axios.post(
-      `${SUPABASE_URL}/rest/v1/users`,
-      { id: user.id, email, username, full_name, role: 'admin' },
-      { headers: { ...getSupabaseHeaders(access_token), 'Prefer': 'return=minimal' } }
-    );
+    const profileData = { 
+      id: user.id, 
+      email, 
+      username: generatedUsername || email.split('@')[0], 
+      full_name: generatedFullName || email.split('@')[0],
+      contact_number: contact_number || '',
+      address: address || '',
+      role: userRole 
+    };
 
-    res.json({ user: { id: user.id, email, username, full_name }, access_token });
+    try {
+      await axios.post(
+        `${SUPABASE_URL}/rest/v1/users`,
+        profileData,
+        { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=minimal' } }
+      );
+    } catch (profileError) {
+      console.error('Profile creation error:', profileError.response?.data);
+    }
+
+    // Auto-create resident for regular users (not admins)
+    if (userRole !== 'admin') {
+      try {
+        await axios.post(
+          `${SUPABASE_URL}/rest/v1/residents`,
+          {
+            user_id: user.id,
+            full_name: generatedFullName || email.split('@')[0],
+            contact_number: contact_number || '',
+            address: address || '',
+            status: 'no_response'
+          },
+          { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=minimal' } }
+        );
+      } catch (residentError) {
+        console.error('Resident creation error:', residentError.response?.data);
+      }
+    }
+
+    res.json({ 
+      user: { 
+        id: user.id, 
+        email, 
+        username: generatedUsername || email.split('@')[0], 
+        full_name: generatedFullName || email.split('@')[0],
+        contact_number: contact_number || '',
+        address: address || '', 
+        role: userRole 
+      }, 
+      access_token 
+    });
   } catch (error) {
     console.error('Register error:', error.response?.data || error.message);
     res.status(400).json({ message: error.response?.data?.msg || 'Registration failed' });
@@ -82,7 +130,15 @@ app.post('/api/auth/login', async (req, res) => {
     const profile = profileResponse.data[0];
 
     res.json({ 
-      user: { id: user.id, email: user.email, username: profile?.username, full_name: profile?.full_name }, 
+      user: { 
+        id: user.id, 
+        email: user.email, 
+        username: profile?.username || email.split('@')[0], 
+        full_name: profile?.full_name || email.split('@')[0],
+        contact_number: profile?.contact_number || '',
+        address: profile?.address || '',
+        role: profile?.role || 'user'
+      }, 
       access_token 
     });
   } catch (error) {
@@ -126,7 +182,13 @@ app.get('/api/auth/me', async (req, res) => {
     );
 
     const profile = profileResponse.data[0];
-    res.json({ id: user.id, email: user.email, username: profile?.username, full_name: profile?.full_name });
+    res.json({ 
+      id: user.id, 
+      email: user.email, 
+      username: profile?.username || user.email.split('@')[0], 
+      full_name: profile?.full_name || user.email.split('@')[0],
+      role: profile?.role || 'user'
+    });
   } catch (error) {
     res.status(401).json({ message: 'Invalid token' });
   }
@@ -188,38 +250,6 @@ app.get('/api/residents/:id', async (req, res) => {
   }
 });
 
-// Create resident
-app.post('/api/residents', async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    const response = await axios.post(
-      `${SUPABASE_URL}/rest/v1/residents`,
-      { ...req.body, status: 'no_response', last_updated: new Date().toISOString() },
-      { headers: { ...getSupabaseHeaders(token), 'Prefer': 'return=representation' } }
-    );
-    res.status(201).json(response.data[0]);
-  } catch (error) {
-    console.error('Create resident error:', error.response?.data || error.message);
-    res.status(400).json({ message: 'Failed to create resident' });
-  }
-});
-
-// Update resident
-app.put('/api/residents/:id', async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    const response = await axios.patch(
-      `${SUPABASE_URL}/rest/v1/residents?id=eq.${req.params.id}`,
-      { ...req.body, last_updated: new Date().toISOString() },
-      { headers: { ...getSupabaseHeaders(token), 'Prefer': 'return=representation' } }
-    );
-    res.json(response.data[0]);
-  } catch (error) {
-    console.error('Update resident error:', error.response?.data || error.message);
-    res.status(400).json({ message: 'Failed to update resident' });
-  }
-});
-
 // Update resident status
 app.put('/api/residents/:id/status', async (req, res) => {
   try {
@@ -233,20 +263,6 @@ app.put('/api/residents/:id/status', async (req, res) => {
     res.json(response.data[0]);
   } catch (error) {
     res.status(400).json({ message: 'Failed to update status' });
-  }
-});
-
-// Delete resident
-app.delete('/api/residents/:id', async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    await axios.delete(
-      `${SUPABASE_URL}/rest/v1/residents?id=eq.${req.params.id}`,
-      { headers: getSupabaseHeaders(token) }
-    );
-    res.json({ message: 'Resident deleted successfully' });
-  } catch (error) {
-    res.status(400).json({ message: 'Failed to delete resident' });
   }
 });
 
@@ -419,6 +435,55 @@ app.post('/api/alerts/test-sms', async (req, res) => {
   res.json(result);
 });
 
+// ============ SMS ROUTES ============
+
+// Send SMS to individual
+app.post('/api/sms/send', async (req, res) => {
+  try {
+    const { phone, message } = req.body;
+    if (!phone || !message) {
+      return res.status(400).json({ message: 'Phone and message are required' });
+    }
+    
+    const result = await sendSMS(phone, message);
+    res.json({ success: true, message: 'SMS sent successfully', data: result });
+  } catch (error) {
+    console.error('Send SMS error:', error.message);
+    res.status(500).json({ message: 'Failed to send SMS' });
+  }
+});
+
+// Broadcast SMS to all residents
+app.post('/api/sms/broadcast', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    const { message } = req.body;
+    
+    if (!message) {
+      return res.status(400).json({ message: 'Message is required' });
+    }
+
+    // Get all residents with contact numbers
+    const response = await axios.get(
+      `${SUPABASE_URL}/rest/v1/residents?select=contact_number&contact_number=not.is.null`,
+      { headers: getSupabaseHeaders(token) }
+    );
+
+    const residents = response.data || [];
+    const phoneNumbers = residents.map(r => r.contact_number).filter(Boolean);
+
+    if (phoneNumbers.length === 0) {
+      return res.status(400).json({ message: 'No residents with contact numbers found' });
+    }
+
+    const result = await sendBulkSMS(phoneNumbers, message);
+    res.json({ success: true, message: `SMS sent to ${phoneNumbers.length} residents`, count: phoneNumbers.length });
+  } catch (error) {
+    console.error('Broadcast SMS error:', error.message);
+    res.status(500).json({ message: 'Failed to broadcast SMS' });
+  }
+});
+
 // ============ SMS HELPER FUNCTIONS ============
 
 async function sendSMS(phoneNumber, message) {
@@ -465,6 +530,81 @@ function formatAlertMessage(alert) {
   const emojis = { low: '⚠️', medium: '🔶', high: '🔴', critical: '🚨' };
   return `${emojis[alert.alert_level]} EMERGENCY ALERT: ${alert.emergency_type.toUpperCase()} at ${alert.location}. Level: ${alert.alert_level.toUpperCase()}. ${alert.instructions}. Reply HELP if you need assistance or SAFE if you are safe.`;
 }
+
+// ============ EMERGENCY REPORTS ROUTES (for residents) ============
+
+// Create emergency report
+app.post('/api/emergency-reports', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Authentication required' });
+
+    // Get user from token
+    const userResponse = await axios.get(
+      `${SUPABASE_URL}/auth/v1/user`,
+      { headers: getSupabaseHeaders(token) }
+    );
+
+    const user = userResponse.data;
+
+    const response = await axios.post(
+      `${SUPABASE_URL}/rest/v1/emergency_reports`,
+      {
+        user_id: user.id,
+        emergency_type: req.body.emergency_type,
+        description: req.body.description,
+        location: req.body.location,
+        status: 'pending'
+      },
+      { headers: { ...getSupabaseHeaders(token), 'Prefer': 'return=representation' } }
+    );
+
+    res.status(201).json(response.data[0]);
+  } catch (error) {
+    console.error('Create emergency report error:', error.response?.data || error.message);
+    res.status(400).json({ message: 'Failed to create emergency report' });
+  }
+});
+
+// Get all emergency reports (admin only)
+app.get('/api/emergency-reports', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Authentication required' });
+
+    const response = await axios.get(
+      `${SUPABASE_URL}/rest/v1/emergency_reports?order=created_at.desc`,
+      { headers: getSupabaseHeaders(token) }
+    );
+
+    res.json(response.data || []);
+  } catch (error) {
+    console.error('Get emergency reports error:', error.response?.data || error.message);
+    res.json([]);
+  }
+});
+
+// Update emergency report status
+app.put('/api/emergency-reports/:id', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Authentication required' });
+
+    const response = await axios.patch(
+      `${SUPABASE_URL}/rest/v1/emergency_reports?id=eq.${req.params.id}`,
+      { 
+        status: req.body.status,
+        updated_at: new Date().toISOString()
+      },
+      { headers: { ...getSupabaseHeaders(token), 'Prefer': 'return=representation' } }
+    );
+
+    res.json(response.data[0]);
+  } catch (error) {
+    console.error('Update emergency report error:', error.response?.data || error.message);
+    res.status(400).json({ message: 'Failed to update emergency report' });
+  }
+});
 
 // Start server
 app.listen(PORT, () => {

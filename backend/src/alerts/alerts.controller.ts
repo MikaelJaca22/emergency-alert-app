@@ -2,11 +2,11 @@ import { Controller, Get, Post, Put, Body, Param, UseGuards, Request } from '@ne
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AlertsService, CreateAlertDto } from './alerts.service';
 import { InfobipService } from './infobip.service';
-import { JwtAuthGuard } from '../shared/guards/jwt-auth.guard';
+import { AdminGuard } from '../shared/guards/admin.guard';
 
 @ApiTags('Alerts')
 @Controller('alerts')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AdminGuard)
 @ApiBearerAuth()
 export class AlertsController {
   constructor(

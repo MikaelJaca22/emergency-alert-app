@@ -7,7 +7,7 @@ import { AuthProvider, useAuth } from '@/hooks/useAuth';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 
-function LoginForm() {
+function AdminLoginForm() {
   const { login } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -24,12 +24,7 @@ function LoginForm() {
 
     try {
       await login(formData);
-      const role = localStorage.getItem('user_role');
-      if (role === 'admin') {
-        router.push('/dashboard');
-      } else {
-        router.push('/report-emergency');
-      }
+      router.push('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Invalid credentials');
     } finally {
@@ -57,12 +52,12 @@ function LoginForm() {
               </svg>
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">
-              Emergency Alert
+              Admin
               <br />
-              System
+              Dashboard
             </h1>
             <p className="text-lg text-blue-100/70 max-w-md mx-auto">
-              Keep your community safe with real-time emergency notifications and resident status tracking.
+              Manage emergency alerts, residents, and community safety from the admin control panel.
             </p>
           </div>
         </div>
@@ -81,8 +76,8 @@ function LoginForm() {
           </div>
 
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-900">Welcome back</h2>
-            <p className="text-slate-500 mt-2">Sign in to access your account</p>
+            <h2 className="text-2xl font-bold text-slate-900">Admin Sign In</h2>
+            <p className="text-slate-500 mt-2">Sign in to access the admin dashboard</p>
           </div>
 
           {error && (
@@ -130,30 +125,30 @@ function LoginForm() {
 
           <div className="mt-6 text-center">
             <p className="text-slate-500">
-              Don&apos;t have an account?{' '}
-              <Link href="/register" className="text-blue-600 hover:text-blue-700 font-medium">
+              Don&apos;t have an admin account?{' '}
+              <Link href="/admin/register" className="text-blue-600 hover:text-blue-700 font-medium">
                 Create one
               </Link>
             </p>
-            <p className="text-slate-400 text-sm mt-2">
-              Admin?{' '}
-              <Link href="/admin/login" className="text-blue-600 hover:text-blue-700 font-medium">
-                Sign in here
+            <p className="text-slate-400 text-sm mt-3">
+              <Link href="/login" className="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center gap-1">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to user login
               </Link>
             </p>
           </div>
-
-
         </div>
       </div>
     </div>
   );
 }
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   return (
     <AuthProvider>
-      <LoginForm />
+      <AdminLoginForm />
     </AuthProvider>
   );
 }
