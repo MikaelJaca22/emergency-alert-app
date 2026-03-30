@@ -139,11 +139,7 @@ export default function SMSPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {loading ? (
-                  <div className="flex justify-center py-8">
-                    <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                  </div>
-                ) : residents.length === 0 ? (
+                {residents.length === 0 ? (
                   <div className="text-center py-8 bg-slate-50 rounded-xl">
                     <svg className="w-10 h-10 text-slate-300 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -259,11 +255,7 @@ export default function SMSPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {loading ? (
-                  <div className="flex justify-center py-8">
-                    <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                  </div>
-                ) : residents.length === 0 ? (
+                {residents.length === 0 ? (
                   <div className="text-center py-8 bg-slate-50 rounded-xl">
                     <p className="text-slate-500">No residents to broadcast to.</p>
                   </div>
