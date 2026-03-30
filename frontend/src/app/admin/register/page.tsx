@@ -11,6 +11,7 @@ function AdminRegisterForm() {
   const { register } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     full_name: '',
@@ -44,7 +45,7 @@ function AdminRegisterForm() {
         username: formData.email.split('@')[0],
         role: 'admin',
       });
-      window.location.href = '/dashboard';
+      setSuccess(true);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed');
     } finally {
@@ -109,7 +110,21 @@ function AdminRegisterForm() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          {success ? (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 text-center">
+              <svg className="w-12 h-12 text-green-600 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="font-medium">Registration successful!</p>
+              <p className="text-sm mt-1">Please login with your admin credentials.</p>
+              <button
+                onClick={() => window.location.href = '/admin/login'}
+                className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Go to Admin Login
+              </button>
+            </div>
+          ) : (
             <Input
               label="Full Name"
               type="text"
@@ -170,6 +185,7 @@ function AdminRegisterForm() {
               Create Admin Account
             </Button>
           </form>
+          )}
 
           <div className="mt-6 text-center">
             <p className="text-slate-500">
