@@ -76,7 +76,7 @@ body {
 
 /* Card hover effect */
 .card-hover {
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 
 /* Smooth animations */
@@ -123,19 +123,19 @@ body {
 }
 
 .animate-slide-up {
-  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: slideUp 0.4s ease-out forwards;
 }
 
 .animate-slide-down {
-  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: slideDown 0.4s ease-out forwards;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.25s ease-out forwards;
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: scaleIn 0.3s ease-out forwards;
 }
 
 @keyframes shimmer {
@@ -179,12 +179,7 @@ body {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-.stagger-1 { animation-delay: 0.05s; }
-.stagger-2 { animation-delay: 0.1s; }
-.stagger-3 { animation-delay: 0.15s; }
-.stagger-4 { animation-delay: 0.2s; }
-.stagger-5 { animation-delay: 0.25s; }
-.stagger-6 { animation-delay: 0.3s; }
+.stagger-1, .stagger-2, .stagger-3, .stagger-4, .stagger-5, .stagger-6 { animation-delay: 0s; }
 
 .card-hover:hover {
   transform: translateY(-2px);
