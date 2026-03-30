@@ -531,8 +531,14 @@ async function sendSMS(phoneNumber, message) {
 
   try {
     const response = await axios.post(
-      `${INFOBIP_BASE_URL}/sms/2/text/advanced`,
-      { messages: [{ from: INFOBIP_SENDER, to: phoneNumber, text: message }] },
+      `${INFOBIP_BASE_URL}/sms/3/messages`,
+      { 
+        messages: [{ 
+          from: INFOBIP_SENDER, 
+          destinations: [{ to: phoneNumber }], 
+          text: message 
+        }] 
+      },
       { headers: { 'Authorization': `App ${INFOBIP_API_KEY}`, 'Content-Type': 'application/json' } }
     );
     return response.data;
@@ -549,10 +555,16 @@ async function sendBulkSMS(phoneNumbers, message) {
   }
 
   try {
-    const messages = phoneNumbers.map(phone => ({ from: INFOBIP_SENDER, to: phone, text: message }));
+    const destinations = phoneNumbers.map(phone => ({ to: phone }));
     const response = await axios.post(
-      `${INFOBIP_BASE_URL}/sms/2/text/advanced`,
-      { messages },
+      `${INFOBIP_BASE_URL}/sms/3/messages`,
+      { 
+        messages: [{ 
+          from: INFOBIP_SENDER, 
+          destinations, 
+          text: message 
+        }] 
+      },
       { headers: { 'Authorization': `App ${INFOBIP_API_KEY}`, 'Content-Type': 'application/json' } }
     );
     return response.data;
@@ -561,6 +573,24 @@ async function sendBulkSMS(phoneNumbers, message) {
     throw new Error('Failed to send bulk SMS');
   }
 }
+
+// Check SMS delivery status
+app.get('/api/sms/status/:messageId', async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    const response = await axios.get(
+      `${INFOBIP_BASE_URL}/sms/3/text/query`,
+      { 
+        params: { messageId },
+        headers: { 'Authorization': `App ${INFOBIP_API_KEY}` } 
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error('SMS status error:', error.response?.data || error.message);
+    res.status(500).json({ message: 'Failed to get SMS status' });
+  }
+});
 
 function formatAlertMessage(alert) {
   const emojis = { low: '⚠️', medium: '🔶', high: '🔴', critical: '🚨' };
