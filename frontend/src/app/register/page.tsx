@@ -47,7 +47,8 @@ function RegisterForm() {
       });
       setSuccess(true);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+      console.error('Registration full error:', err);
+      setError(err.response?.data?.message || err.message || 'Registration failed');
     } finally {
       setLoading(false);
     }

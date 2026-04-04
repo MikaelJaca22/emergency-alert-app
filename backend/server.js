@@ -15,7 +15,15 @@ const allowedOrigins = [
 ].filter(Boolean);
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, server-to-server)
+    if (!origin) return callback(null, true);
+    // Allow any .vercel.app subdomain
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
+    // Allow explicitly listed origins
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(null, true); // Allow all origins in production for now
+  },
   credentials: true
 }));
 app.use(express.json());
@@ -988,10 +996,15 @@ app.get('/api/logs/entity/:type/:id', async (req, res) => {
   }
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    console.log('⚠️  Supabase credentials not configured. Please create a .env file.');
-  }
-});
+// Start server (only when not running in serverless environment like Vercel)
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      console.log('⚠️  Supabase credentials not configured. Please create a .env file.');
+    }
+  });
+}
+
+// Export for Vercel serverless deployment
+module.exports = app;
