@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import DashboardLayout, { Header } from '@/components/layout/DashboardLayout';
 import Card, { CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
+import { useToast } from '@/components/ui/Toast';
 import api from '@/lib/api';
 import { Resident } from '@/types';
 
 export default function ResidentsPage() {
+  const { showToast } = useToast();
   const [residents, setResidents] = useState<Resident[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,6 +23,7 @@ export default function ResidentsPage() {
       setResidents(response.data);
     } catch (error) {
       console.error('Failed to fetch residents:', error);
+      showToast('Failed to load residents', 'error');
     } finally {
       setLoading(false);
     }

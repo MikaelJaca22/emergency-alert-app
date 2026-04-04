@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
+import { ToastProvider, useToast } from '@/components/ui/Toast';
 
 function AdminLoginForm() {
   const { login } = useAuth();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -22,14 +24,18 @@ function AdminLoginForm() {
       await login(formData);
       const role = localStorage.getItem('user_role');
       if (role === 'admin') {
+        showToast('Admin login successful!', 'success');
         window.location.href = '/dashboard';
       } else {
         setError('Access denied. Admin account required.');
+        showToast('Access denied. Admin account required.', 'error');
         localStorage.removeItem('access_token');
         localStorage.removeItem('user_role');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid credentials');
+      const errorMsg = err.response?.data?.message || 'Invalid credentials';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setLoading(false);
     }
@@ -150,7 +156,9 @@ function AdminLoginForm() {
 export default function AdminLoginPage() {
   return (
     <AuthProvider>
-      <AdminLoginForm />
+      <ToastProvider>
+        <AdminLoginForm />
+      </ToastProvider>
     </AuthProvider>
   );
 }

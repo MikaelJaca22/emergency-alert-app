@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Sidebar from './Sidebar';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
+import { ToastProvider } from '@/components/ui/Toast';
 
 interface HeaderProps {
   title: string;
@@ -86,7 +87,9 @@ function DashboardContent({ children }: { children: ReactNode }) {
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <AuthProvider>
-      <DashboardContent>{children}</DashboardContent>
+      <ToastProvider>
+        <DashboardContent>{children}</DashboardContent>
+      </ToastProvider>
     </AuthProvider>
   );
 }

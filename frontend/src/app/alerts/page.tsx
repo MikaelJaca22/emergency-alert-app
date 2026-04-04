@@ -6,10 +6,12 @@ import Card, { CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import Modal from '@/components/ui/Modal';
+import { useToast } from '@/components/ui/Toast';
 import api from '@/lib/api';
 import { Alert } from '@/types';
 
 export default function AlertsPage() {
+  const { showToast } = useToast();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -26,6 +28,7 @@ export default function AlertsPage() {
       setAlerts(response.data);
     } catch (error) {
       console.error('Failed to fetch alerts:', error);
+      showToast('Failed to load alerts', 'error');
     } finally {
       setLoading(false);
     }
@@ -36,8 +39,10 @@ export default function AlertsPage() {
     try {
       await api.put(`/alerts/${id}/resolve`);
       await fetchAlerts();
+      showToast('Alert resolved successfully', 'success');
     } catch (error) {
       console.error('Failed to resolve alert:', error);
+      showToast('Failed to resolve alert', 'error');
     } finally {
       setActionLoading(null);
     }
@@ -49,8 +54,10 @@ export default function AlertsPage() {
     try {
       await api.put(`/alerts/${id}/cancel`);
       await fetchAlerts();
+      showToast('Alert cancelled successfully', 'success');
     } catch (error) {
       console.error('Failed to cancel alert:', error);
+      showToast('Failed to cancel alert', 'error');
     } finally {
       setActionLoading(null);
     }

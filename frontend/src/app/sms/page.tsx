@@ -5,10 +5,12 @@ import DashboardLayout, { Header } from '@/components/layout/DashboardLayout';
 import Card, { CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
+import { useToast } from '@/components/ui/Toast';
 import api from '@/lib/api';
 import { Resident } from '@/types';
 
 export default function SMSPage() {
+  const { showToast } = useToast();
   const [residents, setResidents] = useState<Resident[]>([]);
   const [selectedResident, setSelectedResident] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -31,6 +33,7 @@ export default function SMSPage() {
       }
     } catch (error) {
       console.error('Failed to fetch residents:', error);
+      showToast('Failed to load residents', 'error');
     } finally {
       setLoading(false);
     }
@@ -56,9 +59,11 @@ export default function SMSPage() {
       });
       
       setSendResult({ success: true, message: `SMS sent successfully to ${resident.full_name}` });
+      showToast(`SMS sent to ${resident.full_name}`, 'success');
       setMessage('');
     } catch (error: any) {
       setSendResult({ success: false, message: error.response?.data?.message || 'Failed to send SMS' });
+      showToast(error.response?.data?.message || 'Failed to send SMS', 'error');
     } finally {
       setSending(false);
     }
@@ -76,9 +81,11 @@ export default function SMSPage() {
       });
       
       setSendResult({ success: true, message: `SMS broadcasted to ${res.data.count} residents` });
+      showToast(`SMS broadcasted to ${res.data.count} residents`, 'success');
       setBroadcastMessage('');
     } catch (error: any) {
       setSendResult({ success: false, message: error.response?.data?.message || 'Failed to broadcast SMS' });
+      showToast(error.response?.data?.message || 'Failed to broadcast SMS', 'error');
     } finally {
       setSending(false);
     }

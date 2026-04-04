@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
+import { ToastProvider, useToast } from '@/components/ui/Toast';
 
 function LoginForm() {
   const { login } = useAuth();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -21,13 +23,16 @@ function LoginForm() {
     try {
       await login(formData);
       const role = localStorage.getItem('user_role');
+      showToast('Login successful!', 'success');
       if (role === 'admin') {
         window.location.href = '/dashboard';
       } else {
         window.location.href = '/report-emergency';
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid credentials');
+      const errorMsg = err.response?.data?.message || 'Invalid credentials';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setLoading(false);
     }
@@ -148,7 +153,9 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <AuthProvider>
-      <LoginForm />
+      <ToastProvider>
+        <LoginForm />
+      </ToastProvider>
     </AuthProvider>
   );
 }

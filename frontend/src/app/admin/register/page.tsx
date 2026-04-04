@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
+import { ToastProvider, useToast } from '@/components/ui/Toast';
 
 function AdminRegisterForm() {
   const { register } = useAuth();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -23,12 +25,14 @@ function AdminRegisterForm() {
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
+      showToast('Passwords do not match', 'error');
       setLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters');
+      showToast('Password must be at least 6 characters', 'error');
       setLoading(false);
       return;
     }
@@ -44,9 +48,12 @@ function AdminRegisterForm() {
         address: '',
       });
       setSuccess(true);
+      showToast('Admin registration successful! Please login.', 'success');
     } catch (err: any) {
       console.error('Admin Registration full error:', err);
-      setError(err.response?.data?.message || err.message || 'Registration failed');
+      const errorMsg = err.response?.data?.message || err.message || 'Registration failed';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setLoading(false);
     }
@@ -213,7 +220,9 @@ function AdminRegisterForm() {
 export default function AdminRegisterPage() {
   return (
     <AuthProvider>
-      <AdminRegisterForm />
+      <ToastProvider>
+        <AdminRegisterForm />
+      </ToastProvider>
     </AuthProvider>
   );
 }

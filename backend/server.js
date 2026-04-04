@@ -843,7 +843,7 @@ app.get('/api/emergency-reports', async (req, res) => {
 });
 
 // Update emergency report status
-app.put('/api/emergency-reports/:id', async (req, res) => {
+app.patch('/api/emergency-reports/:id', async (req, res) => {
   try {
     const response = await axios.patch(
       `${SUPABASE_URL}/rest/v1/emergency_reports?id=eq.${req.params.id}`,
@@ -853,28 +853,6 @@ app.put('/api/emergency-reports/:id', async (req, res) => {
       },
       { headers: { ...getSupabaseHeaders(), 'Prefer': 'return=representation' } }
     );
-    res.json(response.data[0]);
-  } catch (error) {
-    console.error('Update emergency report error:', error.response?.data || error.message);
-    res.status(400).json({ message: 'Failed to update emergency report' });
-  }
-});
-
-// Update emergency report status
-app.put('/api/emergency-reports/:id', async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ message: 'Authentication required' });
-
-    const response = await axios.patch(
-      `${SUPABASE_URL}/rest/v1/emergency_reports?id=eq.${req.params.id}`,
-      { 
-        status: req.body.status,
-        updated_at: new Date().toISOString()
-      },
-      { headers: { ...getSupabaseHeaders(token), 'Prefer': 'return=representation' } }
-    );
-
     res.json(response.data[0]);
   } catch (error) {
     console.error('Update emergency report error:', error.response?.data || error.message);

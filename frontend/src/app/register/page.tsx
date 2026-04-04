@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
+import { ToastProvider, useToast } from '@/components/ui/Toast';
 
 function RegisterForm() {
   const { register } = useAuth();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -25,17 +27,19 @@ function RegisterForm() {
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
+      showToast('Passwords do not match', 'error');
       setLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters');
+      showToast('Password must be at least 6 characters', 'error');
       setLoading(false);
       return;
     }
 
-            try {
+    try {
       await register({
         full_name: formData.full_name,
         email: formData.email,
@@ -46,9 +50,12 @@ function RegisterForm() {
         address: formData.address,
       });
       setSuccess(true);
+      showToast('Registration successful! Please login.', 'success');
     } catch (err: any) {
       console.error('Registration full error:', err);
-      setError(err.response?.data?.message || err.message || 'Registration failed');
+      const errorMsg = err.response?.data?.message || err.message || 'Registration failed';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setLoading(false);
     }
@@ -237,7 +244,9 @@ function RegisterForm() {
 export default function RegisterPage() {
   return (
     <AuthProvider>
-      <RegisterForm />
+      <ToastProvider>
+        <RegisterForm />
+      </ToastProvider>
     </AuthProvider>
   );
 }

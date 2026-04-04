@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
+import { ToastProvider, useToast } from '@/components/ui/Toast';
 import api from '@/lib/api';
 import { EMERGENCY_TYPES } from '@/types';
 import Badge from '@/components/ui/Badge';
@@ -29,6 +30,7 @@ interface Alert {
 
 function ResidentDashboard() {
   const { user, logout } = useAuth();
+  const { showToast } = useToast();
   const [activeAlerts, setActiveAlerts] = useState<Alert[]>([]);
   const [myReports, setMyReports] = useState<EmergencyReport[]>([]);
   const [showReportForm, setShowReportForm] = useState(false);
@@ -56,6 +58,7 @@ function ResidentDashboard() {
       setMyReports(filtered);
     } catch (error) {
       console.error('Failed to fetch data:', error);
+      showToast('Failed to load data', 'error');
     } finally {
       setLoading(false);
     }
@@ -71,6 +74,7 @@ function ResidentDashboard() {
         location: formData.location,
       });
       setSuccess(true);
+      showToast('Emergency report submitted successfully!', 'success');
       setFormData({ emergency_type: '', description: '', location: '' });
       fetchData();
       setTimeout(() => {
@@ -79,6 +83,7 @@ function ResidentDashboard() {
       }, 2000);
     } catch (error) {
       console.error('Failed to submit report:', error);
+      showToast('Failed to submit emergency report', 'error');
     } finally {
       setSubmitting(false);
     }
@@ -321,7 +326,9 @@ function ResidentDashboard() {
 export default function ReportEmergencyPage() {
   return (
     <AuthProvider>
-      <ResidentDashboard />
+      <ToastProvider>
+        <ResidentDashboard />
+      </ToastProvider>
     </AuthProvider>
   );
 }

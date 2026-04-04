@@ -5,6 +5,7 @@ import DashboardLayout, { Header } from '@/components/layout/DashboardLayout';
 import StatsCard from '@/components/ui/StatsCard';
 import Card, { CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
+import { useToast } from '@/components/ui/Toast';
 import api from '@/lib/api';
 import { Resident, ResidentStats, Alert } from '@/types';
 
@@ -19,6 +20,7 @@ interface EmergencyReport {
 }
 
 export default function DashboardPage() {
+  const { showToast } = useToast();
   const [stats, setStats] = useState<ResidentStats>({ total: 0, safe: 0, needs_help: 0, no_response: 0 });
   const [residents, setResidents] = useState<Resident[]>([]);
   const [activeAlerts, setActiveAlerts] = useState<Alert[]>([]);
@@ -44,6 +46,7 @@ export default function DashboardPage() {
       setEmergencyReports(reportsRes.data);
     } catch (error) {
       console.error('Failed to fetch data:', error);
+      showToast('Failed to load dashboard data', 'error');
     } finally {
       setLoading(false);
     }
@@ -57,12 +60,14 @@ export default function DashboardPage() {
     try {
       await api.post('/alerts/reset');
       await fetchData();
+      showToast('System reset successfully', 'success');
     } catch (error) {
       console.error('Failed to reset system:', error);
+      showToast('Failed to reset system', 'error');
     } finally {
       setResetLoading(false);
     }
-  }, []);
+  }, [showToast]);
 
   const getStatusBadge = (status: Resident['status']) => {
     const variants = {

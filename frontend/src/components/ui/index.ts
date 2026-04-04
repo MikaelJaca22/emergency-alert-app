@@ -4,3 +4,4 @@ export { default as Card, CardHeader, CardTitle, CardDescription, CardContent, C
 export { default as Badge } from './Badge';
 export { default as StatsCard } from './StatsCard';
 export { default as Modal } from './Modal';
+export { ToastProvider, useToast } from './Toast';

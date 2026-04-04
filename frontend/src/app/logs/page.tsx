@@ -5,6 +5,7 @@ import DashboardLayout, { Header } from '@/components/layout/DashboardLayout';
 import Card, { CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import Modal from '@/components/ui/Modal';
+import { useToast } from '@/components/ui/Toast';
 import api from '@/lib/api';
 import { SystemLog, ActionType, LogLevel } from '@/types';
 
@@ -27,6 +28,7 @@ const ACTION_LABELS: Record<ActionType, string> = {
 };
 
 export default function LogsPage() {
+  const { showToast } = useToast();
   const [logs, setLogs] = useState<SystemLog[]>([]);
   const [stats, setStats] = useState({ total: 0, today: 0, byLevel: {} as Record<string, number>, byAction: {} as Record<string, number> });
   const [loading, setLoading] = useState(true);
@@ -47,6 +49,7 @@ export default function LogsPage() {
       setStats(statsRes.data);
     } catch (error) {
       console.error('Failed to fetch logs:', error);
+      showToast('Failed to load logs', 'error');
     } finally {
       setLoading(false);
     }
