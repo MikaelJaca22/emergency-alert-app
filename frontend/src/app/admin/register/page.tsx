@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
 
-function RegisterForm() {
+function AdminRegisterForm() {
   const { register } = useAuth();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -14,8 +14,6 @@ function RegisterForm() {
     email: '',
     password: '',
     confirmPassword: '',
-    contact_number: '',
-    address: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,19 +33,19 @@ function RegisterForm() {
       return;
     }
 
-            try {
+    try {
       await register({
         full_name: formData.full_name,
         email: formData.email,
         password: formData.password,
         username: formData.email.split('@')[0],
-        role: 'user',
-        contact_number: formData.contact_number,
-        address: formData.address,
+        role: 'admin',
+        contact_number: '',
+        address: '',
       });
       setSuccess(true);
     } catch (err: any) {
-      console.error('Registration full error:', err);
+      console.error('Admin Registration full error:', err);
       setError(err.response?.data?.message || err.message || 'Registration failed');
     } finally {
       setLoading(false);
@@ -63,13 +61,13 @@ function RegisterForm() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Registration Successful!</h2>
-          <p className="text-slate-600 mb-6">Your account has been created. Please login.</p>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Admin Registration Successful!</h2>
+          <p className="text-slate-600 mb-6">Your admin account has been created. Please login.</p>
           <Link
-            href="/login"
+            href="/admin/login"
             className="inline-block px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
           >
-            Go to Login
+            Go to Admin Login
           </Link>
         </div>
       </div>
@@ -78,25 +76,25 @@ function RegisterForm() {
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-20 right-20 w-72 h-72 bg-green-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 left-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-20 right-20 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
         <div className="relative z-10 h-full flex items-center justify-center">
           <div className="text-center px-8 animate-fade-in">
-            <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-green-500/25 mb-6 mx-auto animate-float">
+            <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-500/25 mb-6 mx-auto animate-float">
               <svg className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
             <h1 className="text-4xl font-bold text-white mb-4 animate-slide-up">
-              Create
+              Admin
               <br />
-              Account
+              Portal
             </h1>
-            <p className="text-lg text-green-100/70 max-w-md mx-auto animate-slide-up stagger-1">
-              Register to receive emergency alerts and stay connected with your community.
+            <p className="text-lg text-indigo-100/70 max-w-md mx-auto animate-slide-up stagger-1">
+              Create an admin account to manage emergency alerts and resident information.
             </p>
           </div>
         </div>
@@ -105,16 +103,16 @@ function RegisterForm() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-slate-50">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center justify-center mb-8 animate-scale-in">
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-green-500/25">
+            <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-500/25">
               <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
           </div>
 
           <div className="text-center mb-8 animate-slide-up">
-            <h2 className="text-2xl font-bold text-slate-900">Create your account</h2>
-            <p className="text-slate-500 mt-2">Register to receive emergency alerts</p>
+            <h2 className="text-2xl font-bold text-slate-900">Admin Registration</h2>
+            <p className="text-slate-500 mt-2">Create an admin account</p>
           </div>
 
           {error && (
@@ -126,7 +124,7 @@ function RegisterForm() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="animate-slide-up stagger-1">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
               <input
@@ -135,7 +133,7 @@ function RegisterForm() {
                 value={formData.full_name}
                 onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
 
@@ -143,37 +141,15 @@ function RegisterForm() {
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
               <input
                 type="email"
-                placeholder="user@example.com"
+                placeholder="admin@example.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
 
             <div className="animate-slide-up stagger-3">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Contact Number</label>
-                  <input
-                    type="tel"
-                    placeholder="09123456789"
-                    value={formData.contact_number}
-                    onChange={(e) => setFormData({ ...formData, contact_number: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
-                  />
-                </div>
-
-                <div className="animate-slide-up stagger-4">
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Address</label>
-                  <input
-                    type="text"
-                    placeholder="Purok/Block, Barangay"
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
-              />
-            </div>
-
-            <div className="animate-slide-up stagger-5">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
               <input
                 type="password"
@@ -181,11 +157,11 @@ function RegisterForm() {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
 
-            <div className="animate-slide-up stagger-6">
+            <div className="animate-slide-up stagger-4">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Confirm Password</label>
               <input
                 type="password"
@@ -193,14 +169,14 @@ function RegisterForm() {
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 required
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-medium rounded-lg hover:from-green-700 hover:to-green-800 shadow-lg shadow-green-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed animate-slide-up stagger-6"
+              className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-700 text-white font-medium rounded-lg hover:from-indigo-700 hover:to-purple-800 shadow-lg shadow-indigo-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed animate-slide-up stagger-5"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -208,22 +184,22 @@ function RegisterForm() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Creating account...
+                  Creating admin account...
                 </span>
-              ) : 'Create Account'}
+              ) : 'Create Admin Account'}
             </button>
           </form>
 
           <div className="mt-6 text-center animate-slide-up stagger-6">
             <p className="text-slate-500 mb-2">
-              Already have an account?{' '}
-              <Link href="/login" className="text-green-600 hover:text-green-700 font-medium transition-colors">
+              Already have an admin account?{' '}
+              <Link href="/admin/login" className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors">
                 Login here
               </Link>
             </p>
             <p className="text-slate-500 text-sm">
-              Admin?{' '}
-              <Link href="/admin/register" className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors">
+              Resident?{' '}
+              <Link href="/register" className="text-green-600 hover:text-green-700 font-medium transition-colors">
                 Register here
               </Link>
             </p>
@@ -234,10 +210,10 @@ function RegisterForm() {
   );
 }
 
-export default function RegisterPage() {
+export default function AdminRegisterPage() {
   return (
     <AuthProvider>
-      <RegisterForm />
+      <AdminRegisterForm />
     </AuthProvider>
   );
 }
