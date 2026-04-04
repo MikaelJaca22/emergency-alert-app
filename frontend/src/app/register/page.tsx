@@ -209,7 +209,7 @@ function RegisterForm() {
                   </svg>
                   Creating account...
                 </span>
-              ) : formData.role === 'admin' ? 'Register as Admin' : 'Create Account'}
+              ) : 'Create Account'}
             </button>
           </form>
 
