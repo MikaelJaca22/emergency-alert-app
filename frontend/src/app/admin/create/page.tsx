@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
+import { AuthProvider, useAuth } from '@/hooks/useAuth';
 import apiClient from '@/lib/api';
 
 function CreateAdminForm() {
@@ -194,5 +194,9 @@ function CreateAdminForm() {
 }
 
 export default function CreateAdminPage() {
-  return <CreateAdminForm />;
+  return (
+    <AuthProvider>
+      <CreateAdminForm />
+    </AuthProvider>
+  );
 }
