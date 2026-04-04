@@ -4,19 +4,21 @@ const axios = require('axios');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT || process.env.VERCEL_PORT || 3005;
 
-const frontendUrl = process.env.FRONTEND_URL || 'https://emergency-alert-frontend.onrender.com';
+const frontendUrl = process.env.FRONTEND_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
 const allowedOrigins = [
   'http://localhost:3000', 
   'http://localhost:3001',
   frontendUrl,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
 ].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
     if (origin.endsWith('.onrender.com')) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
     callback(null, true);
