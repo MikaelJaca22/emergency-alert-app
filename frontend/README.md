@@ -33,7 +33,6 @@ frontend/
 │   │   ├── page.tsx           # Homepage
 │   │   ├── login/             # Login page
 │   │   ├── register/           # Registration page
-│   │   ├── admin/login/       # Admin login
 │   │   ├── report-emergency/   # Emergency report form
 │   │   ├── dashboard/          # Admin dashboard
 │   │   ├── residents/          # Resident management

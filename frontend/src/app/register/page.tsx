@@ -16,6 +16,7 @@ function RegisterForm() {
     confirmPassword: '',
     contact_number: '',
     address: '',
+    role: 'user' as 'user' | 'admin',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,9 +42,9 @@ function RegisterForm() {
         email: formData.email,
         password: formData.password,
         username: formData.email.split('@')[0],
-        role: 'user',
-        contact_number: formData.contact_number,
-        address: formData.address,
+        role: formData.role,
+        contact_number: formData.role === 'user' ? formData.contact_number : '',
+        address: formData.role === 'user' ? formData.address : '',
       });
       setSuccess(true);
     } catch (err: any) {
@@ -127,6 +128,31 @@ function RegisterForm() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="animate-slide-up stagger-1 mb-4 flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="role"
+                  value="user"
+                  checked={formData.role === 'user'}
+                  onChange={(e) => setFormData({ ...formData, role: 'user' })}
+                  className="w-4 h-4 text-green-600"
+                />
+                <span className="text-sm font-medium text-slate-700">Resident</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="role"
+                  value="admin"
+                  checked={formData.role === 'admin'}
+                  onChange={(e) => setFormData({ ...formData, role: 'admin' })}
+                  className="w-4 h-4 text-green-600"
+                />
+                <span className="text-sm font-medium text-slate-700">Admin</span>
+              </label>
+            </div>
+
             <div className="animate-slide-up stagger-1">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
               <input
@@ -151,27 +177,31 @@ function RegisterForm() {
               />
             </div>
 
-            <div className="animate-slide-up stagger-3">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Contact Number</label>
-              <input
-                type="tel"
-                placeholder="09123456789"
-                value={formData.contact_number}
-                onChange={(e) => setFormData({ ...formData, contact_number: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
-              />
-            </div>
+            {formData.role === 'user' && (
+              <>
+                <div className="animate-slide-up stagger-3">
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Contact Number</label>
+                  <input
+                    type="tel"
+                    placeholder="09123456789"
+                    value={formData.contact_number}
+                    onChange={(e) => setFormData({ ...formData, contact_number: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
+                  />
+                </div>
 
-            <div className="animate-slide-up stagger-4">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Address</label>
-              <input
-                type="text"
-                placeholder="Purok/Block, Barangay"
-                value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
-              />
-            </div>
+                <div className="animate-slide-up stagger-4">
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Address</label>
+                  <input
+                    type="text"
+                    placeholder="Purok/Block, Barangay"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
+                  />
+                </div>
+              </>
+            )}
 
             <div className="animate-slide-up stagger-5">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
@@ -218,17 +248,7 @@ function RegisterForm() {
             <p className="text-slate-500">
               Already have an account?{' '}
               <Link href="/login" className="text-green-600 hover:text-green-700 font-medium transition-colors">
-                Login
-              </Link>
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              Admin?{' '}
-              <Link href="/admin/login" className="text-green-600 hover:text-green-700 font-medium transition-colors">
-                Login
-              </Link>
-              {' or '}
-              <Link href="/admin/register" className="text-green-600 hover:text-green-700 font-medium transition-colors">
-                Register
+                Login here
               </Link>
             </p>
           </div>

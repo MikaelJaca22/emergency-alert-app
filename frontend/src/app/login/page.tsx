@@ -129,17 +129,7 @@ function LoginForm() {
             <p className="text-slate-500">
               Don&apos;t have an account?{' '}
               <Link href="/register" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                Register
-              </Link>
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              Admin?{' '}
-              <Link href="/admin/login" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                Login here
-              </Link>
-              {' or '}
-              <Link href="/admin/register" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                Register
+                Register here
               </Link>
             </p>
           </div>
