@@ -2,9 +2,8 @@
   "name": "emergency-alert-backend",
   "version": "1.0.0",
   "description": "Emergency Alert System Backend API",
-  "main": "dist/main.js",
+  "main": "server.js",
   "scripts": {
-    "build": "tsc",
     "start": "node server.js",
     "start:dev": "node server.js"
   },
@@ -15,7 +14,9 @@
     "dotenv": "^16.3.1"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.3.0"
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -6,23 +6,20 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3005;
 
-// Middleware
+const frontendUrl = process.env.FRONTEND_URL || 'https://emergency-alert-frontend.onrender.com';
+
 const allowedOrigins = [
   'http://localhost:3000', 
   'http://localhost:3001',
-  process.env.FRONTEND_URL,
-  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+  frontendUrl,
 ].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, server-to-server)
     if (!origin) return callback(null, true);
-    // Allow any .vercel.app subdomain
-    if (origin.endsWith('.vercel.app')) return callback(null, true);
-    // Allow explicitly listed origins
+    if (origin.endsWith('.onrender.com')) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
-    callback(null, true); // Allow all origins in production for now
+    callback(null, true);
   },
   credentials: true
 }));
@@ -996,15 +993,13 @@ app.get('/api/logs/entity/:type/:id', async (req, res) => {
   }
 });
 
-// Start server (only when not running in serverless environment like Vercel)
-if (process.env.VERCEL !== '1') {
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      console.log('⚠️  Supabase credentials not configured. Please create a .env file.');
-    }
-  });
-}
+const PORT = process.env.PORT || 3005;
 
-// Export for Vercel serverless deployment
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.log('⚠️  Supabase credentials not configured. Please set environment variables.');
+  }
+});
+
 module.exports = app;
