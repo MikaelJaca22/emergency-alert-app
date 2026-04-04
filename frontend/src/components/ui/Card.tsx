@@ -46,7 +46,6 @@ Card.displayName = 'Card';
 
 export default Card;
 
-// Card sub-components
 export const CardHeader = memo(function CardHeader({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn('flex items-center justify-between mb-4', className)} {...props}>

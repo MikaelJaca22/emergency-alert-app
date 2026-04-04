@@ -7,8 +7,15 @@ const app = express();
 const PORT = process.env.PORT || 3005;
 
 // Middleware
+const allowedOrigins = [
+  'http://localhost:3000', 
+  'http://localhost:3001',
+  process.env.FRONTEND_URL,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+].filter(Boolean);
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json());

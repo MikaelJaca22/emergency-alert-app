@@ -2,69 +2,49 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { AuthProvider, useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
+import apiClient from '@/lib/api';
 
-function AdminRegisterForm() {
-  const { register } = useAuth();
+function CreateAdminForm() {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({
-    full_name: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    username: '',
+    full_name: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
-      setLoading(false);
-      return;
-    }
+    setSuccess('');
 
     try {
-      await register({
-        full_name: formData.full_name,
-        email: formData.email,
-        password: formData.password,
-        username: formData.email.split('@')[0],
+      await apiClient.post('/auth/register', {
+        ...formData,
         role: 'admin',
       });
-      setSuccess(true);
+      setSuccess('Admin account created successfully!');
+      setFormData({ email: '', password: '', username: '', full_name: '' });
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.response?.data?.message || 'Failed to create admin account');
     } finally {
       setLoading(false);
     }
   };
 
-  if (success) {
+  if (user?.role !== 'admin') {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center animate-scale-in">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-glow">
-            <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Admin Account Created!</h2>
-          <p className="text-slate-600 mb-6">Please login with your admin credentials.</p>
-          <Link
-            href="/admin/login"
-            className="inline-block px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
-          >
-            Go to Admin Login
+      <div className="min-h-screen flex items-center justify-center p-8 bg-slate-50">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-slate-900 mb-4">Access Denied</h1>
+          <p className="text-slate-500 mb-6">You must be an admin to access this page.</p>
+          <Link href="/dashboard" className="text-blue-500 hover:text-blue-600">
+            Return to Dashboard
           </Link>
         </div>
       </div>
@@ -86,12 +66,12 @@ function AdminRegisterForm() {
               </svg>
             </div>
             <h1 className="text-4xl font-bold text-white mb-4 animate-slide-up">
-              Admin
+              Create Admin
               <br />
-              Registration
+              Account
             </h1>
             <p className="text-lg text-blue-100/70 max-w-md mx-auto animate-slide-up stagger-1">
-              Create an admin account to manage the Emergency Alert System for Brgy. Balugo.
+              Add new admin users to the emergency alert system. Only existing admins can create new accounts.
             </p>
           </div>
         </div>
@@ -109,7 +89,7 @@ function AdminRegisterForm() {
 
           <div className="text-center mb-8 animate-slide-up">
             <h2 className="text-2xl font-bold text-slate-900">Create Admin Account</h2>
-            <p className="text-slate-500 mt-2">Register as an admin for Brgy. Balugo</p>
+            <p className="text-slate-500 mt-2">Add a new admin user to the system</p>
           </div>
 
           {error && (
@@ -121,20 +101,17 @@ function AdminRegisterForm() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="animate-slide-up stagger-1">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
-              <input
-                type="text"
-                placeholder="Admin Full Name"
-                value={formData.full_name}
-                onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                required
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-              />
+          {success && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm flex items-center gap-2 animate-slide-down">
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {success}
             </div>
+          )}
 
-            <div className="animate-slide-up stagger-2">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="animate-slide-up stagger-1">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
               <input
                 type="email"
@@ -146,26 +123,39 @@ function AdminRegisterForm() {
               />
             </div>
 
-            <div className="animate-slide-up stagger-3">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+            <div className="animate-slide-up stagger-2">
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Username</label>
               <input
-                type="password"
-                placeholder="Create a password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                type="text"
+                placeholder="adminusername"
+                value={formData.username}
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                required
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+              />
+            </div>
+
+            <div className="animate-slide-up stagger-3">
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
+              <input
+                type="text"
+                placeholder="Admin Full Name"
+                value={formData.full_name}
+                onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                 required
                 className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
             </div>
 
             <div className="animate-slide-up stagger-4">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Confirm Password</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
               <input
                 type="password"
-                placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                placeholder="Create a strong password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
+                minLength={6}
                 className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
             </div>
@@ -181,23 +171,19 @@ function AdminRegisterForm() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Creating account...
+                  Creating admin...
                 </span>
-              ) : 'Register as Admin'}
+              ) : 'Create Admin Account'}
             </button>
           </form>
 
           <div className="mt-6 text-center animate-slide-up stagger-6">
-            <p className="text-slate-500">
-              Already have an account?{' '}
-              <Link href="/admin/login" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                Admin Login
-              </Link>
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              Resident?{' '}
-              <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                Login here
+            <p className="text-slate-400 text-sm">
+              <Link href="/dashboard" className="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center gap-1 transition-colors">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to dashboard
               </Link>
             </p>
           </div>
@@ -207,10 +193,6 @@ function AdminRegisterForm() {
   );
 }
 
-export default function AdminRegisterPage() {
-  return (
-    <AuthProvider>
-      <AdminRegisterForm />
-    </AuthProvider>
-  );
+export default function CreateAdminPage() {
+  return <CreateAdminForm />;
 }

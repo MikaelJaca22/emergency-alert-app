@@ -7,15 +7,11 @@ interface StatsCardProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   value: string | number;
   icon?: ReactNode;
-  trend?: {
-    value: number;
-    isPositive: boolean;
-  };
   variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
 }
 
 const StatsCard = forwardRef<HTMLDivElement, StatsCardProps>(
-  ({ className, title, value, icon, trend, variant = 'default', ...props }, ref) => {
+  ({ className, title, value, icon, variant = 'default', ...props }, ref) => {
     const borderColors = {
       default: 'border-l-slate-400',
       primary: 'border-l-blue-500',
@@ -45,19 +41,7 @@ const StatsCard = forwardRef<HTMLDivElement, StatsCardProps>(
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-slate-500">{title}</p>
-            <div className="flex items-baseline mt-1">
-              <p className="text-2xl font-bold text-slate-900">{value}</p>
-              {trend && (
-                <span
-                  className={cn(
-                    'ml-2 text-sm font-medium',
-                    trend.isPositive ? 'text-green-600' : 'text-red-600'
-                  )}
-                >
-                  {trend.isPositive ? '+' : '-'}{Math.abs(trend.value)}%
-                </span>
-              )}
-            </div>
+            <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
           </div>
           {icon && (
             <div className={cn('p-3 rounded-xl', iconBgColors[variant])}>

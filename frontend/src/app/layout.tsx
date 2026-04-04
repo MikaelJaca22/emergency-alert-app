@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
 import '@/styles/globals.css';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Emergency Alert System',
@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

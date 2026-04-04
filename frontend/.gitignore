@@ -1,18 +1,18 @@
 # Dependencies
-node_modules/
+node_modules
 .pnp
 .pnp.js
 
 # Testing
-coverage/
+coverage
 
 # Next.js
 .next/
 out/
-build/
+build
 
 # Production
-dist/
+dist
 
 # Misc
 .DS_Store
@@ -24,11 +24,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # Local env files
+.env*.local
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 # Vercel
 .vercel

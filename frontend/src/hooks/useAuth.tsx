@@ -60,6 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Ignore logout errors
     }
     localStorage.removeItem('access_token');
+    localStorage.removeItem('user_role');
     setUser(null);
   };
 

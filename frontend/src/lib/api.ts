@@ -10,7 +10,6 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
-// Add auth token to requests
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('access_token');
@@ -21,13 +20,11 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
-// Handle response errors
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
       const url = error.config?.url || '';
-      // Only redirect to login if not checking auth
       if (!url.includes('/auth/me')) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('user_role');

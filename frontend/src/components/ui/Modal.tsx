@@ -51,13 +51,10 @@ export default function Modal({
 
   return createPortal(
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
         onClick={onClose}
       />
-
-      {/* Modal container */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div
           className={cn(
@@ -65,7 +62,6 @@ export default function Modal({
             sizes[size]
           )}
         >
-          {/* Header */}
           {(title || description) && (
             <div className={cn('px-6 py-4 rounded-t-2xl', headerVariants[variant])}>
               <div className="flex items-center justify-between">
@@ -88,8 +84,6 @@ export default function Modal({
               </div>
             </div>
           )}
-
-          {/* Content */}
           <div className="p-6">{children}</div>
         </div>
       </div>

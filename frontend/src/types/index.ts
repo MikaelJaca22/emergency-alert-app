@@ -57,20 +57,6 @@ export interface RegisterData {
   address?: string;
 }
 
-export interface CreateResidentData {
-  full_name: string;
-  address: string;
-  contact_number: string;
-  zone?: string;
-}
-
-export interface CreateAlertData {
-  emergency_type: string;
-  location: string;
-  alert_level: 'low' | 'medium' | 'high' | 'critical';
-  instructions: string;
-}
-
 export type EmergencyType = 
   | 'Fire'
   | 'Flood'
@@ -128,20 +114,19 @@ export interface SystemLog {
   created_at: string;
 }
 
-export interface LogFilter {
-  action?: ActionType;
-  level?: LogLevel;
-  admin_id?: string;
-  start_date?: string;
-  end_date?: string;
-  search?: string;
-  limit?: number;
-  offset?: number;
-}
-
 export interface LogStats {
   total: number;
   today: number;
   byLevel: Record<string, number>;
   byAction: Record<string, number>;
+}
+
+export interface EmergencyReport {
+  id: string;
+  user_id: string;
+  emergency_type: string;
+  description: string;
+  location: string;
+  status: string;
+  created_at: string;
 }
