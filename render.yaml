@@ -4,7 +4,7 @@ services:
     env: node
     plan: free
     rootDir: backend
-    buildCommand: npm install
+    buildCommand: npm install && npm run build
     startCommand: node server.js
     envVars:
       - key: NODE_ENV
@@ -23,7 +23,7 @@ services:
     env: node
     plan: free
     rootDir: frontend
-    buildCommand: npm install
+    buildCommand: npm install && npm run build
     startCommand: npx next start -p $PORT
     envVars:
       - key: NODE_ENV
