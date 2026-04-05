@@ -97,7 +97,7 @@ export default function AlertsPage() {
         description="View and manage all emergency alerts"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4 mb-4 lg:mb-6">
         <div className="animate-slide-up stagger-1">
           <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
             <div className="flex items-center gap-3">
@@ -169,37 +169,37 @@ export default function AlertsPage() {
         </CardHeader>
         <CardContent>
           {alerts.length === 0 ? (
-            <div className="text-center py-12 bg-slate-50 rounded-xl">
-              <p className="text-slate-500">No alerts found.</p>
+            <div className="text-center py-8 lg:py-12 bg-slate-50 rounded-xl">
+              <p className="text-slate-500 text-sm lg:text-base">No alerts found.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto -mx-4 px-4">
+              <table className="w-full min-w-[700px]">
                 <thead>
                   <tr className="border-b border-slate-200">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Date/Time</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Emergency Type</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Location</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Level</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Status</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Actions</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Date/Time</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Emergency Type</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Location</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Level</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Status</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {alerts.map((alert) => (
                     <tr key={alert.id} className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="py-3 px-4 text-slate-500 whitespace-nowrap">{new Date(alert.created_at).toLocaleString()}</td>
-                      <td className="py-3 px-4 font-medium text-slate-900 cursor-pointer hover:text-blue-600" onClick={() => openDetailsModal(alert)}>{alert.emergency_type}</td>
-                      <td className="py-3 px-4 text-slate-600">{alert.location}</td>
-                      <td className="py-3 px-4">{getLevelBadge(alert.alert_level)}</td>
-                      <td className="py-3 px-4">{getStatusBadge(alert.status)}</td>
-                      <td className="py-3 px-4">
+                      <td className="py-2 lg:py-3 px-2 lg:px-4 text-slate-500 text-xs whitespace-nowrap">{new Date(alert.created_at).toLocaleDateString()}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4 font-medium text-slate-900 text-sm cursor-pointer hover:text-blue-600" onClick={() => openDetailsModal(alert)}>{alert.emergency_type}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4 text-slate-600 text-sm">{alert.location}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4">{getLevelBadge(alert.alert_level)}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4">{getStatusBadge(alert.status)}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4">
                         {alert.status === 'active' && (
-                          <div className="flex gap-2">
-                            <Button variant="success" size="sm" onClick={() => handleResolveAlert(alert.id)} loading={actionLoading === alert.id}>
+                          <div className="flex gap-1 lg:gap-2">
+                            <Button variant="success" size="sm" onClick={() => handleResolveAlert(alert.id)} loading={actionLoading === alert.id} className="text-xs px-2 lg:px-3">
                               Resolve
                             </Button>
-                            <Button variant="ghost" size="sm" onClick={() => handleCancelAlert(alert.id)} loading={actionLoading === alert.id} className="text-red-600 hover:bg-red-50">
+                            <Button variant="ghost" size="sm" onClick={() => handleCancelAlert(alert.id)} loading={actionLoading === alert.id} className="text-red-600 hover:bg-red-50 text-xs px-2 lg:px-3">
                               Cancel
                             </Button>
                           </div>

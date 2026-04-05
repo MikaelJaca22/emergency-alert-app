@@ -77,7 +77,7 @@ export default function LogsPage() {
         description="View all administrative actions and system events"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-4 mb-4 lg:mb-6">
         <div className="animate-slide-up stagger-1">
           <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
             <div className="flex items-center gap-3">
@@ -149,36 +149,36 @@ export default function LogsPage() {
         </CardHeader>
         <CardContent>
           {logs.length === 0 ? (
-            <div className="text-center py-12 bg-slate-50 rounded-xl">
-              <p className="text-slate-500">No system logs found.</p>
+            <div className="text-center py-8 lg:py-12 bg-slate-50 rounded-xl">
+              <p className="text-slate-500 text-sm lg:text-base">No system logs found.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto -mx-4 px-4">
+              <table className="w-full min-w-[700px]">
                 <thead>
                   <tr className="border-b border-slate-200">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Date/Time</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Action</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Level</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Description</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Admin</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Details</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Date/Time</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Action</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Level</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500 hidden md:table-cell">Description</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Admin</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Details</th>
                   </tr>
                 </thead>
                 <tbody>
                   {logs.map((log) => (
                     <tr key={log.id} className="border-b border-slate-100 hover:bg-slate-50 cursor-pointer" onClick={() => openDetailsModal(log)}>
-                      <td className="py-3 px-4 text-slate-500 text-sm whitespace-nowrap">{new Date(log.created_at).toLocaleString()}</td>
-                      <td className="py-3 px-4">
-                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                      <td className="py-2 lg:py-3 px-2 lg:px-4 text-slate-500 text-xs whitespace-nowrap">{new Date(log.created_at).toLocaleDateString()}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4">
+                        <span className="px-2 py-0.5 lg:py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
                           {ACTION_LABELS[log.action] || log.action}
                         </span>
                       </td>
-                      <td className="py-3 px-4">{getLevelBadge(log.level)}</td>
-                      <td className="py-3 px-4 text-slate-600 max-w-xs truncate">{log.description}</td>
-                      <td className="py-3 px-4 text-slate-500 text-sm">{log.admin_email || 'System'}</td>
-                      <td className="py-3 px-4">
-                        <button className="text-blue-600 hover:text-blue-800 text-sm">View</button>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4">{getLevelBadge(log.level)}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4 text-slate-600 text-sm max-w-[150px] truncate hidden md:table-cell">{log.description}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4 text-slate-500 text-xs">{log.admin_email || 'System'}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4">
+                        <button className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm">View</button>
                       </td>
                     </tr>
                   ))}

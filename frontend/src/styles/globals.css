@@ -12,4 +12,70 @@
   .card-hover {
     @apply transition-all duration-200 ease-out hover:shadow-md hover:scale-[1.01];
   }
+  
+  /* Mobile-friendly scrollbar */
+  .scrollbar-thin {
+    -ms-overflow-style: thin;
+    scrollbar-width: thin;
+  }
+  
+  /* Touch-friendly tap targets */
+  .tap-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  .no-overflow {
+    overflow-x: hidden;
+  }
+}
+
+/* Custom animations for mobile */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive container */
+@layer components {
+  .container-mobile {
+    @apply w-full px-3 lg:px-4;
+  }
+}
+
+/* Mobile-first responsive breakpoints */
+/* Small phones */
+@media (max-width: 375px) {
+  .text-responsive-sm {
+    font-size: 0.75rem;
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .md\:flex {
+    display: flex;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .lg\:static {
+    position: static;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }

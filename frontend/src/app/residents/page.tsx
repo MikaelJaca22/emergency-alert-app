@@ -52,29 +52,27 @@ export default function ResidentsPage() {
         </CardHeader>
         <CardContent>
           {residents.length === 0 ? (
-            <div className="text-center py-12 bg-slate-50 rounded-xl">
-              <p className="text-slate-500">No residents registered yet.</p>
+            <div className="text-center py-8 lg:py-12 bg-slate-50 rounded-xl">
+              <p className="text-slate-500 text-sm lg:text-base">No residents registered yet.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto -mx-4 px-4">
+              <table className="w-full min-w-[600px]">
                 <thead>
                   <tr className="border-b border-slate-200">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Name</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Address</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Contact</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Status</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-500">Registered</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Name</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500 hidden md:table-cell">Address</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Contact</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {residents.map((resident) => (
                     <tr key={resident.id} className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="py-3 px-4 font-medium text-slate-900">{resident.full_name}</td>
-                      <td className="py-3 px-4 text-slate-600">{resident.address || '-'}</td>
-                      <td className="py-3 px-4 text-slate-600">{resident.contact_number || '-'}</td>
-                      <td className="py-3 px-4">{getStatusBadge(resident.status)}</td>
-                      <td className="py-3 px-4 text-slate-500">{new Date(resident.created_at).toLocaleDateString()}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4 font-medium text-slate-900 text-sm">{resident.full_name}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4 text-slate-600 text-sm hidden md:table-cell">{resident.address || '-'}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4 text-slate-600 text-sm">{resident.contact_number || '-'}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4">{getStatusBadge(resident.status)}</td>
                     </tr>
                   ))}
                 </tbody>
