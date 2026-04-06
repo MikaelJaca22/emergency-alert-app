@@ -63,7 +63,7 @@ export default function ResidentsPage() {
                     <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Name</th>
                     <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500 hidden md:table-cell">Address</th>
                     <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Contact</th>
-                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500">Status</th>
+                    <th className="text-left py-2 lg:py-3 px-2 lg:px-4 text-xs lg:text-sm font-medium text-slate-500 hidden sm:table-cell">Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -72,7 +72,7 @@ export default function ResidentsPage() {
                       <td className="py-2 lg:py-3 px-2 lg:px-4 font-medium text-slate-900 text-sm">{resident.full_name}</td>
                       <td className="py-2 lg:py-3 px-2 lg:px-4 text-slate-600 text-sm hidden md:table-cell">{resident.address || '-'}</td>
                       <td className="py-2 lg:py-3 px-2 lg:px-4 text-slate-600 text-sm">{resident.contact_number || '-'}</td>
-                      <td className="py-2 lg:py-3 px-2 lg:px-4">{getStatusBadge(resident.status)}</td>
+                      <td className="py-2 lg:py-3 px-2 lg:px-4 hidden sm:table-cell">{getStatusBadge(resident.status)}</td>
                     </tr>
                   ))}
                 </tbody>

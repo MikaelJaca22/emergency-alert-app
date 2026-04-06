@@ -72,19 +72,19 @@ function ToastContainer({ toasts, onHide }: { toasts: Toast[]; onHide: (id: stri
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-md">
+    <div className="fixed top-4 left-4 right-4 md:right-4 md:left-auto z-50 flex flex-col gap-2 max-w-md mx-auto md:mx-0">
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`flex items-center gap-3 p-4 rounded-lg border shadow-lg animate-slide-in ${colors[toast.type]}`}
+          className={`flex items-center gap-3 p-3 md:p-4 rounded-lg border shadow-lg animate-slide-in ${colors[toast.type]}`}
         >
-          <span className={`text-${toast.type === 'success' ? 'green' : toast.type === 'error' ? 'red' : toast.type === 'warning' ? 'amber' : 'blue'}-500`}>
+          <span className={`text-${toast.type === 'success' ? 'green' : toast.type === 'error' ? 'red' : toast.type === 'warning' ? 'amber' : 'blue'}-500 flex-shrink-0`}>
             {icons[toast.type]}
           </span>
-          <p className="flex-1 text-sm font-medium">{toast.message}</p>
+          <p className="flex-1 text-xs md:text-sm font-medium">{toast.message}</p>
           <button
             onClick={() => onHide(toast.id)}
-            className="text-slate-400 hover:text-slate-600 transition-colors"
+            className="text-slate-400 hover:text-slate-600 transition-colors flex-shrink-0"
           >
             <X className="w-4 h-4" />
           </button>

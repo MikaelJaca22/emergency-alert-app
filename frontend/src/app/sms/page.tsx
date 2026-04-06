@@ -101,10 +101,10 @@ export default function SMSPage() {
       />
 
       <div className="max-w-4xl mx-auto">
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-4 lg:mb-6 overflow-x-auto pb-2">
           <button
             onClick={() => setActiveTab('individual')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-3 lg:px-4 py-2 rounded-lg font-medium transition-colors text-sm lg:text-base whitespace-nowrap ${
               activeTab === 'individual'
                 ? 'bg-blue-600 text-white'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -114,7 +114,7 @@ export default function SMSPage() {
           </button>
           <button
             onClick={() => setActiveTab('broadcast')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-3 lg:px-4 py-2 rounded-lg font-medium transition-colors text-sm lg:text-base whitespace-nowrap ${
               activeTab === 'broadcast'
                 ? 'bg-blue-600 text-white'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -151,7 +151,7 @@ export default function SMSPage() {
                     <select
                       value={selectedResident}
                       onChange={(e) => setSelectedResident(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                      className="w-full px-3 lg:px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm"
                     >
                       {residents.map((r) => (
                         <option key={r.id} value={r.id}>{r.full_name} - {r.contact_number || 'No phone'}</option>
@@ -160,10 +160,10 @@ export default function SMSPage() {
                   </div>
 
                   {selectedResidentData && (
-                    <div className="p-4 bg-slate-50 rounded-xl mb-4">
-                      <div className="flex items-center justify-between">
+                    <div className="p-3 lg:p-4 bg-slate-50 rounded-xl mb-4">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
                         <div>
-                          <p className="font-medium text-slate-900">{selectedResidentData.full_name}</p>
+                          <p className="font-medium text-slate-900 text-sm lg:text-base">{selectedResidentData.full_name}</p>
                           <p className="text-sm text-slate-500">{selectedResidentData.contact_number || 'No contact number'}</p>
                         </div>
                         <Badge variant={selectedResidentData.status === 'safe' ? 'success' : selectedResidentData.status === 'needs_help' ? 'danger' : 'warning'} dot>
@@ -179,8 +179,8 @@ export default function SMSPage() {
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder="Type your message here..."
-                      rows={4}
-                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                      rows={3}
+                      className="w-full px-3 lg:px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-base"
                     />
                   </div>
 
@@ -215,7 +215,7 @@ export default function SMSPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl mb-4">
+              <div className="p-3 lg:p-4 bg-blue-50 border border-blue-100 rounded-xl mb-4">
                 <p className="text-sm text-blue-700">This will send an SMS to all residents with valid contact numbers.</p>
               </div>
 
@@ -225,8 +225,8 @@ export default function SMSPage() {
                   value={broadcastMessage}
                   onChange={(e) => setBroadcastMessage(e.target.value)}
                   placeholder="Type your broadcast message here..."
-                  rows={4}
-                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                  rows={3}
+                  className="w-full px-3 lg:px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-base"
                 />
               </div>
 
