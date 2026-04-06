@@ -9,6 +9,8 @@ import { useToast } from '@/components/ui/Toast';
 import api from '@/lib/api';
 import { SystemLog, ActionType, LogLevel } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 const ACTION_LABELS: Record<ActionType, string> = {
   login: 'Login',
   logout: 'Logout',
